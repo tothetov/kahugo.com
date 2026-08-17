@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>한국AI휴먼전략연구원 KAHUGO · AI 시대, 사람을 중심에 세우는 전략연구 플랫폼</title>
+<meta name="description" content="한국AI휴먼전략연구원(KAHUGO)은 제5의 물결과 AI 대전환 시대에 인간 중심의 전략·연구·교육·사업화·커뮤니티를 연결하는 민간 전문 싱크탱크형 플랫폼입니다. 12대 AI휴먼전략 아젠다, 10대 창립선언, 4대 사업축, 자가진단, 도서 『제5의 물결과 AI 신문명시대』 미리보기를 제공합니다.">
+<meta name="keywords" content="한국AI휴먼전략연구원,KAHUGO,AI휴먼전략,제5의 물결,AI 신문명,AI 전략연구,AI 리터러시,AI 거버넌스,AI 전환,싱크탱크">
+<meta name="author" content="한국AI휴먼전략연구원 KAHUGO">
+<meta name="theme-color" content="#060f1e">
+<meta name="color-scheme" content="dark light">
+<meta name="format-detection" content="telephone=no">
+<!-- 실시간 편집(관리자 백엔드) 사용 여부. Cloudflare Pages + Functions 배포본은 on,
+     일반 정적 웹호스팅 배포본은 off 입니다. off 이면 /api 를 호출하지 않습니다. -->
+<meta name="kahugo-api" content="on">
+
+<!-- 공유 카드 -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="한국AI휴먼전략연구원 KAHUGO">
+<meta property="og:title" content="한국AI휴먼전략연구원 KAHUGO">
+<meta property="og:description" content="AI 시대, 사람을 중심에 세우는 전략연구 플랫폼 — 12대 아젠다 · 10대 창립선언 · 자가진단 · 『제5의 물결과 AI 신문명시대』 58쪽 미리보기">
+<meta property="og:image" content="assets/og.png">
+<meta property="og:locale" content="ko_KR">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="한국AI휴먼전략연구원 KAHUGO">
+<meta name="twitter:description" content="AI 시대, 사람을 중심에 세우는 전략연구 플랫폼">
+<meta name="twitter:image" content="assets/og.png">
+
+<!-- 아이콘 · PWA -->
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KAHUGO">
+
+<!-- 부트 크리티컬 CSS · 외부 CSS 가 아직/영영 안 붙어도 화면이 깨지지 않게 한다 -->
+<style>
+  html{background:#060f1e;-webkit-text-size-adjust:100%}
+  body{margin:0;background:#060f1e;color:#c6d5e8;
+       font:15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif}
+  html[data-theme="light"]{background:#f4f7fc}
+  html[data-theme="light"] body{background:#f4f7fc;color:#2b3a4f}
+  img{max-width:100%;height:auto}
+  html.kahugo-boot-fail body>*{display:none!important}
+  html.kahugo-boot-fail body>#kahugo-boot{display:block!important}
+</style>
+
+<link rel="stylesheet" href="styles.css">
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Organization",
+"name":"한국AI휴먼전략연구원","alternateName":["KAHUGO","Korea AI Human Strategy Institute"],
+"description":"AI 시대, 사람을 중심에 세우는 전략연구 플랫폼",
+"email":"habibot@naver.com","logo":"assets/kahugo-mark.svg",
+"knowsAbout":["AI 전략","AI 리터러시","AI 거버넌스","조직 전환","AI 사업화","미래전략"]}
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#view">본문으로 건너뛰기</a>
+
+<!-- ══════ 앱 셸 · 2단 고정 헤더 ══════ -->
+<header class="shell" role="banner">
+  <div class="appbar">
+    <a class="brand" href="#/home" aria-label="한국AI휴먼전략연구원 KAHUGO 홈으로">
+      <img class="brand__mark" src="assets/kahugo-mark.svg" alt="" width="30" height="30" aria-hidden="true">
+      <span class="brand__txt">
+        <span class="brand__ko">한국AI휴먼전략연구원</span>
+        <span class="brand__en">KAHUGO</span>
+      </span>
+    </a>
+    <span class="appbar__spacer"></span>
+    <nav class="iconbar" id="iconbar" aria-label="빠른 기능"></nav>
+  </div>
+  <nav class="navbar" aria-label="주 메뉴">
+    <div class="nav" id="nav"></div>
+  </nav>
+</header>
+
+<!-- ══════ 라우트 뷰 ══════ -->
+<main id="view" class="view" role="main" tabindex="-1"></main>
+
+<!-- ══════ 푸터 ══════ -->
+<footer class="foot" id="foot" role="contentinfo"></footer>
+
+<!-- ══════ 하단 탭바 (모바일·태블릿) ══════ -->
+<nav class="bottomnav" id="bottomnav" aria-label="하단 주 메뉴"></nav>
+
+<!-- ══════ 챗봇 FAB (데스크톱) ══════ -->
+<button type="button" class="fab" data-action="open-chat" aria-label="KAHUGO 가이드 챗봇 열기">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M20.4 12.4c0 4-3.8 7.2-8.4 7.2a9.8 9.8 0 0 1-2.6-.35L4.6 20.6l1.2-3.5A6.9 6.9 0 0 1 3.6 12.4c0-4 3.8-7.2 8.4-7.2s8.4 3.2 8.4 7.2z"/>
+    <path d="M8.8 12h.01M12 12h.01M15.2 12h.01"/>
+  </svg>
+</button>
+
+<!-- ══════ 오버레이 ══════ -->
+<div class="backdrop" id="backdrop" hidden-aria></div>
+
+<!-- 통합 검색 패널 -->
+<section class="panel panel--search" id="panel-search" role="dialog" aria-modal="true" aria-label="통합 검색" aria-hidden="true">
+  <div class="searchbox">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+      <circle cx="10.8" cy="10.8" r="6.6"/><path d="m15.6 15.6 4.2 4.2"/>
+    </svg>
+    <input type="search" id="search-input" placeholder="연구·랩·프로그램·리포트·도서 찾기" autocomplete="off" aria-label="검색어 입력">
+    <button type="button" class="panel__close" data-action="close-panels" aria-label="검색 닫기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m5.8 5.8 12.4 12.4M18.2 5.8 5.8 18.2"/></svg>
+    </button>
+  </div>
+  <div class="panel__body">
+    <div id="search-default"></div>
+    <div id="search-results" role="region" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- 챗봇 패널 -->
+<section class="panel panel--chat" id="panel-chat" role="dialog" aria-modal="true" aria-label="KAHUGO 가이드 챗봇" aria-hidden="true">
+  <div class="panel__head">
+    <span class="badge badge--accent badge--dot">가이드 모드</span>
+    <h2 class="panel__title">KAHUGO 가이드</h2>
+    <button type="button" class="panel__close" data-action="close-panels" aria-label="챗봇 닫기">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m5.8 5.8 12.4 12.4M18.2 5.8 5.8 18.2"/></svg>
+    </button>
+  </div>
+  <div class="panel__body">
+    <div class="chat__log" id="chat-log" role="log" aria-live="polite"></div>
+  </div>
+  <div class="panel__foot">
+    <div class="chips chips--x" id="chat-chips" style="margin-bottom:10px"></div>
+    <form id="chat-form" style="display:flex;gap:7px">
+      <input class="input" id="chat-input" type="text" placeholder="궁금한 것을 입력하세요" autocomplete="off" aria-label="챗봇 질문 입력">
+      <button type="submit" class="btn btn--accent btn--sm" aria-label="전송">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.6 12h14.2"/><path d="m13.2 6.4 5.6 5.6-5.6 5.6"/></svg>
+      </button>
+    </form>
+  </div>
+</section>
+
+<!-- 모달 -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal__bg" id="modal-bg"></div>
+  <div class="modal__box">
+    <div class="modal__head">
+      <div id="modal-title" style="flex:1 1 auto"></div>
+      <button type="button" class="panel__close" data-action="close-modal" aria-label="닫기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m5.8 5.8 12.4 12.4M18.2 5.8 5.8 18.2"/></svg>
+      </button>
+    </div>
+    <div class="modal__body" id="modal-body"></div>
+    <div class="modal__foot" id="modal-foot"></div>
+  </div>
+</div>
+
+<!-- 토스트 -->
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+
+<!-- 인쇄 전용 영역 -->
+<div id="print-area" aria-hidden="true"></div>
+
+<noscript>
+  <div style="padding:40px 20px;max-width:640px;margin:0 auto;color:#c6d5e8">
+    <h1 style="color:#eef4fc">자바스크립트가 꺼져 있습니다</h1>
+    <p>이 플랫폼은 화면 전환과 검색·진단·미리보기 기능에 자바스크립트를 사용합니다.
+    브라우저 설정에서 자바스크립트를 허용한 뒤 새로고침해 주세요.</p>
+    <p>문의: <a href="mailto:habibot@naver.com" style="color:#2fd4e8">habibot@naver.com</a></p>
+  </div>
+</noscript>
+
+<!-- ══════ 부트 실패 안내 (외부 CSS·JS 가 붙지 않은 경우에만 표시) ══════ -->
+<div id="kahugo-boot" hidden style="display:none"></div>
+
+<script src="data.js"></script>
+<script src="book.js"></script>
+<script src="app.js"></script>
+
+<!-- ══════ 부트 가드 · 모바일 파일열기(content:// · file://) 깨짐 차단 ══════ -->
+<script>
+(function () {
+  var D = document, H = D.documentElement;
+
+  function cssReady() {
+    try { return !!(getComputedStyle(H).getPropertyValue('--bg') || '').trim(); }
+    catch (e) { return true; }
+  }
+  function jsReady() {
+    return !!(window.KAHUGO_DATA && window.KAHUGO_BOOK && window.KAHUGO_ROUTES);
+  }
+  function localScheme() {
+    return /^(file|content|blob|android-app):/i.test(location.protocol);
+  }
+
+  function paint(reasons) {
+    var box = D.getElementById('kahugo-boot');
+    if (!box) return;
+
+    var card = 'background:#0b1a30;border:1px solid #1d3557;border-radius:16px;padding:18px 16px;margin:0 0 12px';
+    var num  = 'display:inline-block;min-width:24px;height:24px;line-height:24px;text-align:center;border-radius:999px;background:#2f7df6;color:#fff;font-weight:700;font-size:13px;margin-right:8px';
+    var btn  = 'display:inline-block;margin:10px 8px 0 0;padding:11px 18px;border-radius:999px;background:#2f7df6;color:#fff;text-decoration:none;font-weight:700;font-size:14px;border:0;cursor:pointer';
+    var btn2 = btn.replace('background:#2f7df6;color:#fff', 'background:transparent;color:#7ad6ec;border:1px solid #2f5f8f');
+    var dim  = 'color:#8fa4bf;font-size:13px;line-height:1.75;margin:6px 0 0';
+
+    box.innerHTML =
+      '<div style="max-width:620px;margin:0 auto;padding:28px 18px 56px;' +
+        'font:15px/1.75 -apple-system,BlinkMacSystemFont,\'Segoe UI\',system-ui,\'Apple SD Gothic Neo\',\'Malgun Gothic\',sans-serif;' +
+        'color:#c6d5e8">' +
+
+        '<div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">' +
+          '<svg viewBox="0 0 96 96" width="38" height="38" aria-hidden="true">' +
+            '<rect width="96" height="96" rx="24" fill="#2f7df6"/>' +
+            '<path d="M30 24V72" stroke="#06152b" stroke-width="11.5" stroke-linecap="round" fill="none"/>' +
+            '<path d="M67 24 38 48 67 72" stroke="#06152b" stroke-width="11.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>' +
+            '<circle cx="69" cy="22" r="9" fill="#f4c95d"/><circle cx="69" cy="73.5" r="7.6" fill="#fff"/>' +
+          '</svg>' +
+          '<div><div style="font-weight:800;color:#eef4fc;font-size:16px">한국AI휴먼전략연구원</div>' +
+          '<div style="color:#7ad6ec;font-size:12.5px;letter-spacing:.06em;font-weight:700">KAHUGO</div></div>' +
+        '</div>' +
+
+        '<h1 style="font-size:22px;line-height:1.45;color:#eef4fc;margin:0 0 10px;word-break:keep-all">' +
+          '이 파일은 <span style="color:#7ad6ec">인터넷 주소</span>로 열어야<br>정상 화면이 나옵니다</h1>' +
+        '<p style="' + dim + '">지금처럼 파일 하나만 눌러서 열면, 디자인 파일과 기능 파일이 함께 열리지 않아 ' +
+          '글자만 나열되어 보입니다. 아래 세 가지 중 하나로 여시면 즉시 정상 표시됩니다.</p>' +
+
+        '<div style="margin-top:22px">' +
+          '<div style="' + card + '">' +
+            '<div style="color:#eef4fc;font-weight:700;font-size:15px"><span style="' + num + '">1</span>인터넷 주소로 접속 (가장 쉬움)</div>' +
+            '<p style="' + dim + '">브라우저 주소창에 아래 주소를 입력하세요. 폰·태블릿·PC 모두 동일하게 동작합니다.</p>' +
+            '<a href="https://kahugo.com" style="' + btn + '">https://kahugo.com 열기</a>' +
+          '</div>' +
+
+          '<div style="' + card + '">' +
+            '<div style="color:#eef4fc;font-weight:700;font-size:15px"><span style="' + num + '">2</span>폰에서 파일로 보려면 “단일 파일” 사용</div>' +
+            '<p style="' + dim + '">받으신 압축파일 안의 <b style="color:#f4c95d">kahugo-standalone.html</b> 을 대신 여세요. ' +
+              '이 파일 하나에 디자인·기능이 모두 들어 있어 폴더 없이도 그대로 열립니다.</p>' +
+          '</div>' +
+
+          '<div style="' + card + '">' +
+            '<div style="color:#eef4fc;font-weight:700;font-size:15px"><span style="' + num + '">3</span>PC 라면 폴더째 풀고 열기</div>' +
+            '<p style="' + dim + '">압축을 푼 폴더를 통째로 둔 상태에서 그 안의 index.html 을 여세요. ' +
+              'index.html 만 따로 옮기면 같은 증상이 다시 나타납니다.</p>' +
+          '</div>' +
+        '</div>' +
+
+        '<div style="margin-top:6px">' +
+          '<button type="button" id="kahugo-boot-retry" style="' + btn2 + '">다시 시도</button>' +
+        '</div>' +
+
+        '<p style="' + dim + ';margin-top:22px;border-top:1px solid #16304f;padding-top:14px">' +
+          '진단: ' + reasons.join(' · ') + '<br>' +
+          '문의 <a href="mailto:habibot@naver.com" style="color:#7ad6ec">habibot@naver.com</a><br>' +
+          '© 2026 Korea AI Human Strategy Institute.</p>' +
+      '</div>';
+
+    box.hidden = false;
+    box.style.display = 'block';
+    H.className += ' kahugo-boot-fail';
+
+    var rt = D.getElementById('kahugo-boot-retry');
+    if (rt) rt.addEventListener('click', function () { location.reload(); });
+  }
+
+  function check() {
+    var css = cssReady(), js = jsReady();
+    if (css && js) return;
+    var reasons = [];
+    if (!css) reasons.push('디자인 파일(styles.css) 미연결');
+    if (!js) reasons.push('기능 파일(app.js) 미연결');
+    reasons.push('열기 방식 ' + location.protocol.replace(':', ''));
+    paint(reasons);
+  }
+
+  /* 로컬 파일 스킴이면 렌더 직후, 그 외에는 로드 완료 후 한 번만 검사한다. */
+  function schedule() { setTimeout(check, localScheme() ? 80 : 400); }
+  if (D.readyState === 'complete') schedule();
+  else window.addEventListener('load', schedule);
+})();
+</script>
+</body>
+</html>

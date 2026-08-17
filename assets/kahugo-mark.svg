@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="KAHUGO 심볼">
+  <title>KAHUGO — 한국AI휴먼전략연구원 심볼</title>
+  <desc>흰 사각형 안의 심볼 시그니처. 열린 궤도의 링과 골드 코어는 사람의 통찰과 판단을,
+        아래 두 겹의 파동은 제5의 물결과 AI 대전환의 흐름을 뜻한다. 문자를 쓰지 않은 도형 시그니처.</desc>
+  <defs>
+    <linearGradient id="kg-ring" x1="0.12" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#1f62d6"/>
+      <stop offset="1" stop-color="#11a6d4"/>
+    </linearGradient>
+    <linearGradient id="kg-w1" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1f62d6"/>
+      <stop offset="1" stop-color="#2f7df6"/>
+    </linearGradient>
+    <linearGradient id="kg-w2" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4d9bff"/>
+      <stop offset="1" stop-color="#12bcd6"/>
+    </linearGradient>
+    <linearGradient id="kg-core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8d478"/>
+      <stop offset="1" stop-color="#d99a12"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 박스 — 흰색 채우기 (다크 헤더에서 확실히 떠오르게) -->
+  <rect x="1.4" y="1.4" width="93.2" height="93.2" rx="22.5"
+        fill="#ffffff" stroke="#cfdaea" stroke-width="2.4"/>
+
+  <!-- 열린 궤도 — 사람의 질문과 통찰 -->
+  <path d="M36.05 44.53A15.6 15.6 0 1 1 50.71 49.86" fill="none"
+        stroke="url(#kg-ring)" stroke-width="6.4" stroke-linecap="round"/>
+
+  <!-- 골드 코어 — 사람의 판단 -->
+  <circle cx="48" cy="34.5" r="7" fill="url(#kg-core)"/>
+
+  <!-- 제5의 물결 — 2겹 파동 -->
+  <path d="M14 70q11-8 22 0 11 8 22 0 11-8 22 0" fill="none"
+        stroke="url(#kg-w1)" stroke-width="6.8" stroke-linecap="round"/>
+  <path d="M21 83q9-6.5 18 0 9 6.5 18 0 9-6.5 18 0" fill="none"
+        stroke="url(#kg-w2)" stroke-width="5.6" stroke-linecap="round" opacity="0.66"/>
+</svg>

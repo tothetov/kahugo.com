@@ -1,0 +1,21 @@
+# Cloudflare Pages 헤더 설정 (Apache .htaccess 대체)
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/assets/*
+  Cache-Control: public, max-age=2592000
+
+/styles.css
+  Cache-Control: public, max-age=604800
+/data.js
+  Cache-Control: public, max-age=604800
+/book.js
+  Cache-Control: public, max-age=604800
+/app.js
+  Cache-Control: public, max-age=604800
+
+/index.html
+  Cache-Control: no-cache, must-revalidate
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate

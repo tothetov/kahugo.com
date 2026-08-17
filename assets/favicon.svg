@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="KAHUGO">
+  <title>KAHUGO 파비콘</title>
+  <defs>
+    <linearGradient id="fv-ring" x1="0.12" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#1f62d6"/><stop offset="1" stop-color="#11a6d4"/>
+    </linearGradient>
+    <linearGradient id="fv-w" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1f62d6"/><stop offset="1" stop-color="#12bcd6"/>
+    </linearGradient>
+    <linearGradient id="fv-core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8d478"/><stop offset="1" stop-color="#d99a12"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="62" height="62" rx="15" fill="#ffffff" stroke="#cfdaea" stroke-width="2"/>
+  <path d="M22.5 29.5a10.6 10.6 0 1 1 2.5 7.5" fill="none" stroke="url(#fv-ring)"
+        stroke-width="5.2" stroke-linecap="round"/>
+  <circle cx="32" cy="23" r="5" fill="url(#fv-core)"/>
+  <path d="M10 46.5q6-5 12-0.3 6 4.7 12 0 6-4.7 12-0.3"
+        fill="none" stroke="url(#fv-w)" stroke-width="5.4" stroke-linecap="round"/>
+</svg>
