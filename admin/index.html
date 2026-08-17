@@ -1,248 +1,175 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>kahugo 관리자 페이지</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: '맑은 고딕', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .container {
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            padding: 40px;
-            max-width: 800px;
-            width: 100%;
-        }
-        
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-        
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-            border: 1px solid #eee;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        
-        .section h2 {
-            color: #667eea;
-            font-size: 18px;
-            margin-bottom: 15px;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
-        }
-        
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 12px;
-            margin: 10px 0;
-            background: #f8f9ff;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .menu-item:hover {
-            background: #667eea;
-            color: white;
-            transform: translateX(5px);
-        }
-        
-        .menu-item span {
-            font-size: 20px;
-            margin-right: 15px;
-        }
-        
-        .menu-item p {
-            margin: 0;
-        }
-        
-        .menu-item p.title {
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-        
-        .menu-item p.desc {
-            font-size: 12px;
-            color: #999;
-        }
-        
-        .menu-item:hover p.desc {
-            color: rgba(255,255,255,0.8);
-        }
-        
-        .stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-        
-        .stat-box {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .stat-box .number {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-        
-        .stat-box .label {
-            font-size: 14px;
-            opacity: 0.9;
-        }
-        
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            color: #999;
-            font-size: 12px;
-        }
-        
-        @media (max-width: 600px) {
-            .container {
-                padding: 20px;
-            }
-            
-            .stats {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1>📊 kahugo 관리자 페이지</h1>
-        <p class="subtitle">Welcome to Admin Dashboard</p>
-        
-        <!-- 통계 섹션 -->
-        <div class="stats">
-            <div class="stat-box">
-                <div class="number">5</div>
-                <div class="label">활성 프로젝트</div>
-            </div>
-            <div class="stat-box">
-                <div class="number">12</div>
-                <div class="label">완료된 작업</div>
-            </div>
-        </div>
-        
-        <!-- 메뉴 섹션 1 -->
-        <div class="section">
-            <h2>📝 콘텐츠 관리</h2>
-            <div class="menu-item" onclick="goTo('#')">
-                <span>📄</span>
-                <div>
-                    <p class="title">페이지 관리</p>
-                    <p class="desc">웹사이트 페이지 추가 및 수정</p>
-                </div>
-            </div>
-            <div class="menu-item" onclick="goTo('#')">
-                <span>🖼️</span>
-                <div>
-                    <p class="title">이미지 업로드</p>
-                    <p class="desc">사이트에 사용할 이미지 관리</p>
-                </div>
-            </div>
-            <div class="menu-item" onclick="goTo('#')">
-                <span>🎬</span>
-                <div>
-                    <p class="title">미디어 라이브러리</p>
-                    <p class="desc">동영상 및 파일 관리</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 메뉴 섹션 2 -->
-        <div class="section">
-            <h2>🔧 사이트 설정</h2>
-            <div class="menu-item" onclick="goTo('#')">
-                <span>⚙️</span>
-                <div>
-                    <p class="title">기본 설정</p>
-                    <p class="desc">사이트 제목, 설명 변경</p>
-                </div>
-            </div>
-            <div class="menu-item" onclick="goTo('#')">
-                <span>🌐</span>
-                <div>
-                    <p class="title">도메인 설정</p>
-                    <p class="desc">도메인 및 SSL 관리</p>
-                </div>
-            </div>
-            <div class="menu-item" onclick="goTo('#')">
-                <span>👤</span>
-                <div>
-                    <p class="title">사용자 관리</p>
-                    <p class="desc">관리자 계정 추가/삭제</p>
-                </div>
-            </div>
-        </div>
-        
-        <!-- 메뉴 섹션 3 -->
-        <div class="section">
-            <h2>📊 분석 & 보고</h2>
-            <div class="menu-item" onclick="goTo('#')">
-                <span>📈</span>
-                <div>
-                    <p class="title">방문자 통계</p>
-                    <p class="desc">일일/월별 방문자 분석</p>
-                </div>
-            </div>
-            <div class="menu-item" onclick="goTo('#')">
-                <span>💬</span>
-                <div>
-                    <p class="title">문의 관리</p>
-                    <p class="desc">사용자 메시지 및 문의</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="footer">
-            <p>kahugo.com 관리 시스템 © 2026</p>
-            <p>마지막 업데이트: 2026년 8월 17일</p>
-        </div>
-    </div>
-    
-    <script>
-        function goTo(path) {
-            if (path !== '#') {
-                alert('준비 중입니다. 곧 추가될 예정입니다! 📋');
-            }
-        }
-    </script>
-</body>
-</html>
+/* ============================================================
+   KAHUGO 플랫폼 관리자 모드 · admin.css
+   외부 웹폰트 0건 · 외부 CDN 0건 · 시스템 폰트만 사용
+   ============================================================ */
+:root{
+  --a-bg:#0a1424; --a-panel:#0f2038; --a-panel2:#152b48; --a-line:#22405f;
+  --a-ink:#eef4fc; --a-ink2:#c3d3e6; --a-sub:#8ba2be; --a-faint:#63799a;
+  --a-brand:#2f7df6; --a-accent:#2fd4e8; --a-gold:#f4c95d; --a-danger:#f2705f;
+  --a-ok:#19c39c;
+  --a-r:11px; --a-r-lg:16px;
+  --a-font:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕","Segoe UI",Roboto,sans-serif;
+  --a-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+*{min-width:0}
+html,body{height:100%}
+body{
+  margin:0;background:var(--a-bg);color:var(--a-ink2);
+  font:14.5px/1.65 var(--a-font);
+  -webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:anywhere;
+}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,textarea,select{font:inherit}
+h1,h2,h3,h4{margin:0;color:var(--a-ink);line-height:1.35}
+a{color:var(--a-accent)}
+svg{width:1.05em;height:1.05em;flex:0 0 auto}
+:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(47,125,246,.45);border-radius:8px}
+
+/* ── 잠금 화면 ─────────────────────────────────────────── */
+.lock{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:radial-gradient(120% 90% at 20% 0%,#12294a 0%,#0a1424 60%);z-index:50}
+.lock__box{width:100%;max-width:400px;background:var(--a-panel);border:1px solid var(--a-line);
+  border-radius:var(--a-r-lg);padding:28px 24px;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+.lock__mark{width:52px;height:52px;margin-bottom:16px}
+.lock__t{font-size:19px;font-weight:800;margin-bottom:6px}
+.lock__s{font-size:13px;color:var(--a-sub);margin:0 0 18px}
+.lock__err{display:none;margin-top:10px;font-size:13px;color:var(--a-danger);font-weight:700}
+.lock__err.on{display:block}
+.lock__note{margin-top:16px;padding-top:14px;border-top:1px solid var(--a-line);
+  font-size:12px;color:var(--a-faint);line-height:1.7}
+
+/* ── 레이아웃 ─────────────────────────────────────────── */
+.wrap{display:flex;flex-direction:column;height:100vh}
+.top{display:flex;align-items:center;gap:12px;padding:10px 16px;
+  background:var(--a-panel);border-bottom:1px solid var(--a-line);flex:0 0 auto;flex-wrap:wrap}
+.top__brand{display:flex;align-items:center;gap:9px;margin-right:auto}
+.top__brand img,.top__brand svg{width:30px;height:30px}
+.top__ko{font-size:13.5px;font-weight:800;color:var(--a-ink);display:block;line-height:1.25}
+.top__en{font-size:10.5px;letter-spacing:.11em;color:var(--a-accent);font-weight:800}
+.top__mode{font-size:11px;font-weight:800;letter-spacing:.05em;padding:4px 10px;border-radius:999px;
+  background:rgba(47,212,232,.14);color:var(--a-accent)}
+.top__mode--cloud{background:rgba(25,195,156,.16);color:var(--a-ok)}
+.top__dirty{font-size:11.5px;font-weight:800;color:var(--a-gold);display:none}
+.top__dirty.on{display:inline}
+
+.main{display:flex;flex:1 1 auto;min-height:0}
+.side{width:212px;flex:0 0 212px;background:var(--a-panel);border-right:1px solid var(--a-line);
+  overflow-y:auto;padding:10px 8px 24px}
+.side__g{font-size:10.5px;font-weight:800;letter-spacing:.09em;color:var(--a-faint);
+  padding:14px 10px 6px;text-transform:uppercase}
+.side__i{display:flex;align-items:center;gap:9px;width:100%;text-align:left;
+  padding:9px 10px;border-radius:9px;color:var(--a-ink2);font-size:13.5px;font-weight:650}
+.side__i:hover{background:var(--a-panel2);color:var(--a-ink)}
+.side__i.on{background:var(--a-brand);color:#fff;font-weight:750}
+.side__n{margin-left:auto;font-size:11px;color:var(--a-faint);font-family:var(--a-mono)}
+.side__i.on .side__n{color:rgba(255,255,255,.75)}
+
+.body{flex:1 1 auto;min-width:0;overflow-y:auto;padding:18px 20px 60px}
+.body__head{margin-bottom:16px}
+.body__t{font-size:19px;font-weight:800}
+.body__s{font-size:13px;color:var(--a-sub);margin-top:4px}
+
+/* ── 버튼 ─────────────────────────────────────────────── */
+.b{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:38px;padding:9px 15px;border-radius:999px;font-size:13px;font-weight:750;
+  border:1px solid transparent;transition:filter .15s ease,background .15s ease}
+.b:hover{filter:brightness(1.12)}
+.b--p{background:var(--a-brand);color:#fff}
+.b--a{background:linear-gradient(135deg,var(--a-brand),var(--a-accent));color:#fff}
+.b--g{background:var(--a-panel2);color:var(--a-ink);border-color:var(--a-line)}
+.b--l{background:transparent;color:var(--a-ink2);border-color:var(--a-line)}
+.b--d{background:transparent;color:var(--a-danger);border-color:rgba(242,112,95,.45)}
+.b--s{min-height:31px;padding:5px 11px;font-size:12px}
+.b[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+
+/* ── 카드 · 리스트 ─────────────────────────────────────── */
+.card{background:var(--a-panel);border:1px solid var(--a-line);border-radius:var(--a-r);
+  padding:14px;margin-bottom:12px}
+.rowlist{display:flex;flex-direction:column;gap:8px}
+.row{display:flex;align-items:center;gap:10px;background:var(--a-panel);border:1px solid var(--a-line);
+  border-radius:var(--a-r);padding:10px 12px}
+.row__n{width:26px;flex:0 0 26px;text-align:center;font-family:var(--a-mono);font-size:11.5px;
+  color:var(--a-faint)}
+.row__t{flex:1 1 auto;min-width:0}
+.row__t b{display:block;color:var(--a-ink);font-size:14px;font-weight:700;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row__t span{display:block;font-size:12px;color:var(--a-sub);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row__acts{display:flex;gap:5px;flex:0 0 auto}
+.iq{width:31px;height:31px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  background:var(--a-panel2);border:1px solid var(--a-line);color:var(--a-ink2)}
+.iq:hover{border-color:var(--a-accent);color:var(--a-accent)}
+.iq--d:hover{border-color:var(--a-danger);color:var(--a-danger)}
+
+/* ── 폼 ───────────────────────────────────────────────── */
+.f{margin-bottom:13px}
+.f__l{display:block;font-size:12px;font-weight:750;color:var(--a-sub);margin-bottom:5px}
+.f__l code{font-family:var(--a-mono);font-size:11px;color:var(--a-faint)}
+.f__h{font-size:11.5px;color:var(--a-faint);margin-top:4px;line-height:1.6}
+.i,.t,.sel{width:100%;background:var(--a-panel2);border:1px solid var(--a-line);border-radius:9px;
+  padding:10px 12px;color:var(--a-ink);font-size:13.5px}
+.i:focus,.t:focus,.sel:focus{border-color:var(--a-accent)}
+.t{min-height:96px;resize:vertical;line-height:1.7}
+.t--big{min-height:220px}
+.t--code{font-family:var(--a-mono);font-size:12.5px;line-height:1.6}
+.ck{display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--a-ink2)}
+.ck input{width:17px;height:17px;accent-color:var(--a-brand)}
+.grp{border:1px solid var(--a-line);border-radius:var(--a-r);padding:12px;margin-bottom:13px;
+  background:rgba(21,43,72,.4)}
+.grp__t{font-size:12px;font-weight:800;color:var(--a-accent);margin-bottom:10px;
+  letter-spacing:.04em}
+.sub{border-left:2px solid var(--a-line);padding-left:12px;margin-left:2px}
+
+/* ── 상단 액션바 ──────────────────────────────────────── */
+.bar{display:flex;gap:8px;flex-wrap:wrap;padding:11px 20px;background:var(--a-panel);
+  border-top:1px solid var(--a-line);flex:0 0 auto}
+.bar__sp{margin-left:auto}
+
+/* ── 미리보기 ─────────────────────────────────────────── */
+.pv{position:fixed;inset:0;background:rgba(4,10,20,.92);z-index:60;display:none;
+  flex-direction:column;padding:14px}
+.pv.on{display:flex}
+.pv__top{display:flex;align-items:center;gap:9px;margin-bottom:10px;flex-wrap:wrap}
+.pv__t{font-size:14px;font-weight:800;color:var(--a-ink);margin-right:auto}
+.pv__frame{flex:1 1 auto;min-height:0;background:#060f1e;border:1px solid var(--a-line);
+  border-radius:var(--a-r-lg);overflow:hidden;display:flex;justify-content:center}
+.pv__frame iframe{width:100%;height:100%;border:0;background:#060f1e}
+.pv__frame.m iframe{width:390px;max-width:100%}
+.pv__frame.t iframe{width:834px;max-width:100%}
+
+/* ── 토스트 ───────────────────────────────────────────── */
+.tst{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:80;
+  display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.tst__i{background:var(--a-panel2);border:1px solid var(--a-line);border-radius:999px;
+  padding:10px 18px;font-size:13px;font-weight:700;color:var(--a-ink);
+  box-shadow:0 12px 32px rgba(0,0,0,.45)}
+.tst__i.ok{border-color:rgba(25,195,156,.5);color:var(--a-ok)}
+.tst__i.warn{border-color:rgba(244,201,93,.5);color:var(--a-gold)}
+.tst__i.err{border-color:rgba(242,112,95,.5);color:var(--a-danger)}
+
+/* ── 안내 박스 ────────────────────────────────────────── */
+.note{display:flex;gap:9px;background:rgba(47,125,246,.1);border:1px solid var(--a-line);
+  border-left:3px solid var(--a-brand);border-radius:var(--a-r);padding:12px 14px;
+  font-size:12.5px;line-height:1.75;color:var(--a-ink2);margin-bottom:14px}
+.note--gold{background:rgba(244,201,93,.1);border-left-color:var(--a-gold)}
+.note--danger{background:rgba(242,112,95,.1);border-left-color:var(--a-danger)}
+
+.steps{counter-reset:s;margin:0;padding:0;list-style:none}
+.steps li{counter-increment:s;position:relative;padding:0 0 12px 30px;font-size:13px;line-height:1.7}
+.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:21px;height:21px;
+  border-radius:999px;background:var(--a-brand);color:#fff;font-size:11.5px;font-weight:800;
+  display:flex;align-items:center;justify-content:center}
+
+/* ── 반응형 ───────────────────────────────────────────── */
+@media (max-width:820px){
+  .main{flex-direction:column}
+  .side{width:auto;flex:0 0 auto;display:flex;gap:6px;overflow-x:auto;padding:8px;
+    border-right:0;border-bottom:1px solid var(--a-line)}
+  .side__g{display:none}
+  .side__i{width:auto;flex:0 0 auto;white-space:nowrap}
+  .body{padding:14px}
+  .top{padding:9px 12px}
+  .bar{padding:10px 12px}
+}
