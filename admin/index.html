@@ -1,3 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KAHUGO 플랫폼 관리자 모드</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#0a1424">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<!--
+================================================================
+  KAHUGO 플랫폼 관리자 모드  ·  admin/index.html
+================================================================
+  이 파일 하나만 GitHub 의  admin/index.html  에 붙여넣으면
+  https://kahugo.com/admin/  주소가 열립니다.
+  (디자인 CSS 와 기능 JS 가 모두 이 파일 안에 들어 있습니다.
+   admin.css · admin.js 를 따로 올리실 필요가 없습니다.)
+
+  화면이 열리면 맨 먼저 「시스템 점검」이 나옵니다.
+  ✅ 세 줄이 모두 초록색이면 로그인 화면으로 넘어갑니다.
+  ❌ 가 있으면 그 줄에 무엇을 하면 되는지 그대로 적혀 있습니다.
+
+  문의 habibot@naver.com
+================================================================
+-->
+<style>
 /* ============================================================
    KAHUGO 플랫폼 관리자 모드 · admin.css
    외부 웹폰트 0건 · 외부 CDN 0건 · 시스템 폰트만 사용
@@ -173,3 +199,889 @@ svg{width:1.05em;height:1.05em;flex:0 0 auto}
   .top{padding:9px 12px}
   .bar{padding:10px 12px}
 }
+
+/* ── 자가점검 화면 ─────────────────────────────────────── */
+.chk { max-width:520px; }
+.chk__i { display:flex; align-items:flex-start; gap:10px; padding:11px 0;
+  border-bottom:1px solid var(--a-line); font-size:13.5px; }
+.chk__i:last-child { border-bottom:0; }
+.chk__m { flex:0 0 20px; font-size:15px; line-height:1.5; }
+.chk__t { flex:1 1 auto; }
+.chk__t b { display:block; color:var(--a-ink); font-weight:700; }
+.chk__t span { display:block; color:var(--a-sub); font-size:12.5px; margin-top:2px; line-height:1.65; }
+.chk__ok b { color:var(--a-ok); }
+.chk__ng b { color:var(--a-danger); }
+.chk__wait b { color:var(--a-gold); }
+
+</style>
+</head>
+<body>
+
+<!-- ══════ 1. 시스템 점검 ══════ -->
+<div class="lock" id="boot">
+  <div class="lock__box chk">
+    <svg viewBox="0 0 96 96" width="48" height="48" style="margin-bottom:14px" aria-hidden="true">
+      <rect x="1.4" y="1.4" width="93.2" height="93.2" rx="22.5" fill="#fff" stroke="#cfdaea" stroke-width="2.4"/>
+      <path d="M36.05 44.53A15.6 15.6 0 1 1 50.71 49.86" fill="none" stroke="#1f62d6" stroke-width="6.4" stroke-linecap="round"/>
+      <circle cx="48" cy="34.5" r="7" fill="#e5b53a"/>
+      <path d="M14 70q11-8 22 0 11 8 22 0 11-8 22 0" fill="none" stroke="#2f7df6" stroke-width="6.8" stroke-linecap="round"/>
+      <path d="M21 83q9-6.5 18 0 9 6.5 18 0 9-6.5 18 0" fill="none" stroke="#4d9bff" stroke-width="5.6" stroke-linecap="round" opacity=".66"/>
+    </svg>
+    <div class="lock__t">KAHUGO 플랫폼 관리자 모드</div>
+    <p class="lock__s">준비 상태를 확인하고 있습니다…</p>
+    <div id="chk"></div>
+    <div id="chk-act" style="margin-top:16px"></div>
+    <p class="lock__note">문의 habibot@naver.com</p>
+  </div>
+</div>
+
+<!-- ══════ 2. 로그인 ══════ -->
+<div class="lock" id="lock" style="display:none">
+  <div class="lock__box">
+    <img class="lock__mark" src="../assets/kahugo-mark.svg" alt="" aria-hidden="true"
+         onerror="this.style.display='none'">
+    <div class="lock__t">KAHUGO 플랫폼 관리자 모드</div>
+    <p class="lock__s">서버에 저장된 비밀번호로 확인합니다.</p>
+    <form id="cloud-form" autocomplete="off">
+      <div class="f">
+        <label class="f__l" for="cloud-pw">관리자 비밀번호</label>
+        <input class="i" id="cloud-pw" type="password" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="b b--a" style="width:100%">로그인</button>
+      <div class="lock__err" id="cloud-err"></div>
+    </form>
+    <p class="lock__note">
+      비밀번호는 Cloudflare「환경 변수 및 암호」의 <b>ADMIN_PASSWORD</b> 값입니다.
+      이 화면은 검색엔진에 노출되지 않으며, 로그인 없이는 저장이 되지 않습니다.<br>
+      문의 habibot@naver.com
+    </p>
+  </div>
+</div>
+
+<!-- ══════ 3. 편집 화면 ══════ -->
+<div class="wrap" id="wrap" style="display:none">
+  <header class="top">
+    <span class="top__brand">
+      <img src="../assets/kahugo-mark.svg" alt="" aria-hidden="true" onerror="this.style.display='none'">
+      <span><span class="top__ko">한국AI휴먼전략연구원</span><span class="top__en">KAHUGO ADMIN</span></span>
+    </span>
+    <span class="top__mode top__mode--cloud">실시간 편집 모드</span>
+    <span class="top__dirty" id="dirty">● 저장하지 않은 변경</span>
+  </header>
+
+  <div class="main">
+    <nav class="side" id="side" aria-label="편집 항목"></nav>
+    <div class="body" id="body"></div>
+  </div>
+
+  <div class="bar">
+    <button type="button" class="b b--g" data-act="preview">미리보기</button>
+    <button type="button" class="b b--l" data-act="reset">원본으로 되돌리기</button>
+    <button type="button" class="b b--l b--s" data-act="exp-json">백업 내려받기</button>
+    <span class="bar__sp"></span>
+    <button type="button" class="b b--a" id="btn-save" data-act="save">저장 (사이트 즉시 반영)</button>
+  </div>
+</div>
+
+<!-- ══════ 미리보기 ══════ -->
+<div class="pv" id="pv">
+  <div class="pv__top">
+    <span class="pv__t">미리보기</span>
+    <button type="button" class="b b--p b--s" data-act="pv-w" data-w="">PC</button>
+    <button type="button" class="b b--l b--s" data-act="pv-w" data-w="t">태블릿</button>
+    <button type="button" class="b b--l b--s" data-act="pv-w" data-w="m">모바일</button>
+    <button type="button" class="b b--g b--s" data-act="pv-close">닫기</button>
+  </div>
+  <div class="pv__frame"><iframe id="pv-frame" title="미리보기"></iframe></div>
+</div>
+
+<div class="tst" id="tst" aria-live="polite"></div>
+
+<script>
+/* ══════════ 설정 ══════════ */
+window.KAHUGO_ADMIN_CFG = { mode: 'cloud', passHash: '', previewUrl: '../index.html', baseUrl: '../' };
+window.KAHUGO_ADMIN_SRC = { DATA: {}, BOOK: {}, ASSETS: {}, PARTS: {} };
+</script>
+
+<script>
+/* ══════════ 시스템 점검 ══════════
+   ① 콘텐츠 파일(../data.js, ../book.js)
+   ② 로그인 서버(/api/login)
+   ③ 저장소(/api/content)
+   셋 다 통과해야 편집이 가능하므로, 무엇이 빠졌는지 먼저 보여 준다. */
+(function () {
+  var rows = [
+    { id: 'files', t: '콘텐츠 파일 (data.js · book.js)', s: '확인 중…', m: '…', k: 'wait' },
+    { id: 'login', t: '로그인 서버 (/api/login)',        s: '확인 중…', m: '…', k: 'wait' },
+    { id: 'store', t: '저장소 (/api/content · KV)',       s: '확인 중…', m: '…', k: 'wait' }
+  ];
+
+  function paint() {
+    document.getElementById('chk').innerHTML = rows.map(function (r) {
+      return '<div class="chk__i chk__' + r.k + '"><span class="chk__m">' + r.m + '</span>' +
+             '<span class="chk__t"><b>' + r.t + '</b><span>' + r.s + '</span></span></div>';
+    }).join('');
+  }
+  function set(id, k, s) {
+    for (var i = 0; i < rows.length; i++) if (rows[i].id === id) {
+      rows[i].k = k;
+      rows[i].m = k === 'ok' ? '✅' : (k === 'ng' ? '❌' : '⏳');
+      rows[i].s = s;
+    }
+    paint();
+  }
+  paint();
+
+  function loadScript(src) {
+    return new Promise(function (res) {
+      var s = document.createElement('script');
+      s.src = src;
+      s.onload = function () { res(true); };
+      s.onerror = function () { res(false); };
+      document.head.appendChild(s);
+    });
+  }
+
+  var okFiles = false, okLogin = false, okStore = false;
+
+  /* ① 콘텐츠 파일 */
+  loadScript('../data.js').then(function (a) {
+    return loadScript('../book.js').then(function (b) { return a && b; });
+  }).then(function (ok) {
+    ok = ok && !!(window.KAHUGO_DATA && window.KAHUGO_BOOK);
+    okFiles = ok;
+    if (ok) {
+      var S = window.KAHUGO_ADMIN_SRC;
+      S.DATA = window.KAHUGO_DATA; S.BOOK = window.KAHUGO_BOOK;
+      delete S.DATA.SEARCH_INDEX;
+      set('files', 'ok', '연구 아젠다 ' + (S.DATA.RESEARCH || []).length + '개 · 미리보기 ' +
+          (S.BOOK.BOOK_PREVIEW || []).length + '쪽을 읽었습니다.');
+    } else {
+      set('files', 'ng', '사이트 본문 파일이 없습니다. 저장소 맨 위(admin 폴더 바깥)에 ' +
+          'index.html · styles.css · data.js · book.js · app.js 와 assets 폴더를 올려 주세요.');
+    }
+    return fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                 body: JSON.stringify({ password: '' }) });
+  }).then(function (r) {
+    /* 비밀번호를 빈 값으로 보냈으므로 401 이 정상. 500 이면 환경변수 미설정. */
+    if (r.status === 401) { okLogin = true; set('login', 'ok', '서버가 응답합니다. 비밀번호 확인 준비 완료.'); }
+    else if (r.status === 500) { set('login', 'ng', 'ADMIN_PASSWORD 가 없습니다. Cloudflare 프로젝트 →「설정」→「환경 변수 및 암호」에서 ADMIN_PASSWORD 를 추가하고 다시 배포해 주세요.'); }
+    else { set('login', 'ng', 'functions 폴더가 배포되지 않았습니다(응답 ' + r.status + '). ' +
+          '저장소에 functions/api/login.js 와 functions/api/content.js 를 올린 뒤 다시 배포해 주세요.'); }
+    return fetch('/api/content');
+  }).catch(function () {
+    set('login', 'ng', '서버에 연결하지 못했습니다. functions 폴더가 저장소에 있는지 확인해 주세요.');
+    return fetch('/api/content').catch(function () { return null; });
+  }).then(function (r) {
+    if (!r) { set('store', 'ng', '저장소 주소에 연결하지 못했습니다.'); return null; }
+    if (r.status === 404) { set('store', 'ng', 'functions/api/content.js 가 없습니다.'); return null; }
+    return r.json().catch(function () { return null; });
+  }).then(function (j) {
+    if (j && j.ok) {
+      if (j.note && j.note.indexOf('KV') >= 0) {
+        set('store', 'ng', 'KV 저장소가 연결되지 않았습니다. Cloudflare →「Storage & Databases」→ KV 에서 네임스페이스를 만들고, 프로젝트 설정에서 변수 이름 KAHUGO_KV 로 연결해 주세요.');
+      } else {
+        okStore = true;
+        set('store', 'ok', j.updated ? ('마지막 저장 ' + String(j.updated).slice(0, 10)) : '연결되었습니다. 아직 저장된 내용은 없습니다.');
+      }
+    } else if (j) {
+      set('store', 'ng', j.error || '저장소 응답이 올바르지 않습니다.');
+    }
+    finish();
+  }).catch(function () { finish(); });
+
+  function finish() {
+    var act = document.getElementById('chk-act');
+    if (okFiles && okLogin && okStore) {
+      document.querySelector('#boot .lock__s').textContent = '모든 준비가 끝났습니다.';
+      act.innerHTML = '<button type="button" class="b b--a" style="width:100%" id="go-login">로그인 화면으로</button>';
+      document.getElementById('go-login').addEventListener('click', open);
+      setTimeout(open, 900);
+    } else if (okFiles && okLogin) {
+      document.querySelector('#boot .lock__s').textContent = '저장소만 연결하시면 됩니다.';
+      act.innerHTML = '<button type="button" class="b b--g" style="width:100%" id="go-login">그래도 로그인해 보기</button>';
+      document.getElementById('go-login').addEventListener('click', open);
+    } else {
+      document.querySelector('#boot .lock__s').textContent = '위에 ❌ 로 표시된 것을 먼저 해결해 주세요.';
+      act.innerHTML = '<button type="button" class="b b--l" style="width:100%" onclick="location.reload()">다시 확인</button>';
+    }
+  }
+  function open() {
+    document.getElementById('boot').style.display = 'none';
+    document.getElementById('lock').style.display = 'flex';
+    var i = document.getElementById('cloud-pw'); if (i) i.focus();
+  }
+})();
+</script>
+
+<script>
+/* ============================================================
+   KAHUGO 플랫폼 관리자 모드 · admin.js
+   ------------------------------------------------------------
+   두 가지 모드를 한 코드로 처리한다.
+     · offline : 관리자 PC 안의 단일 파일. 편집 → 미리보기 → 파일 내보내기
+     · cloud   : kahugo.com 안의 관리자 페이지. 편집 → 저장 → 사이트 즉시 반영
+
+   외부 라이브러리 0건. 모든 편집은 원본을 건드리지 않고
+   '덮어쓸 부분'만 만들어 낸다(오버라이드 방식).
+   ============================================================ */
+(function (W) {
+  'use strict';
+
+  /* ══════════ 0. 유틸 ══════════════════════════════════ */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+  function isArr(v) { return Object.prototype.toString.call(v) === '[object Array]'; }
+  function isObj(v) { return v && typeof v === 'object' && !isArr(v); }
+
+  function toast(msg, kind) {
+    var box = $('#tst'); if (!box) return;
+    var el = document.createElement('div');
+    el.className = 'tst__i' + (kind ? ' ' + kind : '');
+    el.textContent = msg;
+    box.appendChild(el);
+    setTimeout(function () { if (el.parentNode) el.parentNode.removeChild(el); }, 2600);
+  }
+
+  /* 비밀번호 해시 — 로컬 파일에서는 crypto.subtle 을 못 쓰는 브라우저가 있어
+     의존 없는 문자열 해시를 쓴다. 완전한 암호학적 보호가 아니라
+     '남이 우연히 열어보는 것'을 막는 1차 잠금이다. (문서에 그대로 안내) */
+  var imul = Math.imul || function (a, b) {
+    var ah = (a >>> 16) & 0xffff, al = a & 0xffff, bh = (b >>> 16) & 0xffff, bl = b & 0xffff;
+    return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)) | 0;
+  };
+  function hash(str) {
+    /* 32비트 곱셈을 imul 로 처리한다. 일반 곱셈은 2^53 을 넘는 순간
+       정밀도가 깨져 빌드 스크립트가 계산한 값과 달라진다. */
+    var h1 = 0x811c9dc5 | 0, h2 = 0x01000193 | 0, i, c;
+    for (i = 0; i < str.length; i++) {
+      c = str.charCodeAt(i);
+      h1 = imul(h1 ^ c, 0x01000193);
+      h2 = imul((h2 + c) | 0, 0x85ebca6b);
+      h2 = h2 ^ (h2 >>> 13);
+    }
+    return ('00000000' + (h1 >>> 0).toString(16)).slice(-8) +
+           ('00000000' + (h2 >>> 0).toString(16)).slice(-8);
+  }
+
+  function download(name, text, mime) {
+    var blob = new Blob([text], { type: (mime || 'text/plain') + ';charset=utf-8' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 400);
+  }
+
+  /* ══════════ 1. 상태 ══════════════════════════════════ */
+  var CFG = W.KAHUGO_ADMIN_CFG || {};      /* {mode, passHash, salt} */
+  var SRC = W.KAHUGO_ADMIN_SRC || {};      /* {DATA, BOOK, ASSETS, PARTS} 원본 */
+  var ST = {
+    mode: CFG.mode || 'offline',
+    DATA: {}, BOOK: {},
+    sec: null, rec: null,
+    dirty: false,
+    token: ''
+  };
+
+  /* ══════════ 2. 섹션 정의 ═════════════════════════════ */
+  /* key      : 데이터 키
+     root     : 'DATA' | 'BOOK'
+     title/desc
+     kind     : 'list'(배열) | 'object'(단일 객체) | 'json'
+     label(x) : 목록에 보일 제목
+     sub(x)   : 목록 부제 */
+  var SECTIONS = [
+    { g: '메뉴 · 탭 구조' },
+    { key: 'NAV', root: 'DATA', kind: 'list', title: '상단 대메뉴',
+      desc: '헤더 두 번째 줄의 메뉴입니다. 순서를 바꾸거나 이름·아이콘을 고칠 수 있습니다.',
+      label: function (x) { return x.full || x.label; }, sub: function (x) { return x.route; } },
+    { key: 'BOTTOM_NAV', root: 'DATA', kind: 'list', title: '하단 탭바',
+      desc: '휴대폰·태블릿 화면 아래에 고정되는 탭입니다. 5개를 넘기지 않는 편이 좋습니다.',
+      label: function (x) { return x.label; }, sub: function (x) { return x.route; } },
+    { key: 'ICON_ACTIONS', root: 'DATA', kind: 'list', title: '아이콘 메뉴',
+      desc: '헤더 오른쪽의 찾기 · 다크모드 · 챗봇 · 협력문의 버튼입니다.',
+      label: function (x) { return x.label; }, sub: function (x) { return x.action || x.route; } },
+    { key: 'QUICK_ACTIONS', root: 'DATA', kind: 'list', title: '홈 퀵액션 4종',
+      label: function (x) { return x.t; }, sub: function (x) { return x.s; } },
+    { key: 'START_HERE', root: 'DATA', kind: 'list', title: '어디서 시작할까요',
+      label: function (x) { return x.name; }, sub: function (x) { return x.line; } },
+
+    { g: '기관 · 본문 콘텐츠' },
+    { key: 'INSTITUTE', root: 'DATA', kind: 'object', title: '기관 기본 정보',
+      desc: '기관명·슬로건·히어로 문구·이메일·푸터 표기가 모두 여기에 있습니다.' },
+    { key: 'DECLARATIONS', root: 'DATA', kind: 'list', title: '10대 창립선언',
+      label: function (x) { return x.title; }, sub: function (x) { return x.short; } },
+    { key: 'RESEARCH', root: 'DATA', kind: 'list', title: '12대 연구 아젠다',
+      label: function (x) { return x.title; }, sub: function (x) { return x.desc; } },
+    { key: 'CATEGORIES', root: 'DATA', kind: 'list', title: '아젠다 분류',
+      label: function (x) { return x.ko; }, sub: function (x) { return x.id; } },
+    { key: 'LABS', root: 'DATA', kind: 'list', title: '연구랩',
+      label: function (x) { return x.ko; }, sub: function (x) { return x.line || x.en; } },
+    { key: 'PROGRAMS', root: 'DATA', kind: 'list', title: '4대 사업축',
+      label: function (x) { return x.name; }, sub: function (x) { return x.lead; } },
+    { key: 'PUBLICATIONS', root: 'DATA', kind: 'list', title: '출판 · 리포트',
+      label: function (x) { return x.title; }, sub: function (x) { return x.desc; } },
+    { key: 'MEMBERSHIP', root: 'DATA', kind: 'list', title: '멤버십 등급',
+      label: function (x) { return x.name; }, sub: function (x) { return x.line; } },
+    { key: 'ROADMAP', root: 'DATA', kind: 'list', title: '성장 로드맵',
+      label: function (x) { return x.title; }, sub: function (x) { return x.term; } },
+    { key: 'VALUE_TABS', root: 'DATA', kind: 'list', title: '핵심 가치 탭',
+      label: function (x) { return x.title; }, sub: function (x) { return x.text; } },
+    { key: 'FAQ', root: 'DATA', kind: 'list', title: '자주 묻는 질문',
+      label: function (x) { return x.q; }, sub: function (x) { return x.a; } },
+    { key: 'TRUST_NOTES', root: 'DATA', kind: 'list', title: '표기 원칙',
+      label: function (x) { return x.title; }, sub: function (x) { return x.text; } },
+    { key: 'WEEKLY_QUESTIONS', root: 'DATA', kind: 'list', title: '이번 주의 질문',
+      label: function (x) { return x.q; }, sub: function (x) { return x.tag || ''; } },
+    { key: 'COMMUNITY_SEED', root: 'DATA', kind: 'list', title: '커뮤니티 공지글',
+      label: function (x) { return x.title; }, sub: function (x) { return x.author; } },
+    { key: 'INTERESTS', root: 'DATA', kind: 'list', title: '관심 주제',
+      label: function (x) { return x.ko || x; }, sub: function (x) { return x.id || ''; } },
+    { key: 'DIAGNOSTIC', root: 'DATA', kind: 'object', title: '자가진단 문항·등급' },
+    { key: 'CHAT_INTENTS', root: 'DATA', kind: 'list', title: '챗봇 응답',
+      label: function (x) { return x.chip; }, sub: function (x) { return (x.keys || []).join(', '); } },
+    { key: 'CHAT_CONFIG', root: 'DATA', kind: 'object', title: '챗봇 기본 설정' },
+
+    { g: '도서 서브퍼널' },
+    { key: 'BOOK', root: 'BOOK', kind: 'object', title: '도서 기본 정보' },
+    { key: 'BOOK_TOC', root: 'BOOK', kind: 'list', title: '도서 목차',
+      label: function (x) { return x.t || x.title; }, sub: function (x) { return x.part || ''; } },
+    { key: 'BOOK_KEYWORDS', root: 'BOOK', kind: 'list', title: '신문명 키워드',
+      label: function (x) { return x.k; }, sub: function (x) { return x.d; } },
+    { key: 'BOOK_OPPS', root: 'BOOK', kind: 'list', title: '사업 기회',
+      label: function (x) { return x.t; }, sub: function (x) { return x.d || x.c; } },
+    { key: 'BOOK_QUOTES', root: 'BOOK', kind: 'list', title: '인용문',
+      label: function (x) { return typeof x === 'string' ? x : (x.t || x.q); }, sub: function () { return ''; } },
+    { key: 'BOOK_PREVIEW', root: 'BOOK', kind: 'list', title: '미리보기 쪽',
+      label: function (x) { return x.title; }, sub: function (x) { return x.part; } },
+    { key: 'BOOK_DIAG', root: 'BOOK', kind: 'list', title: '도서 진단 문항',
+      label: function (x) { return x.q; }, sub: function (x) { return String(x.no); } },
+    { key: 'BOOK_WORKBOOK', root: 'BOOK', kind: 'list', title: '실행 워크북',
+      label: function (x) { return x.t || x.title; }, sub: function (x) { return x.d || ''; } },
+
+    { g: '이미지 · 고급' },
+    { key: '__assets', kind: 'assets', title: '이미지 · 로고 교체' },
+    { key: '__json', kind: 'json', title: '고급 — JSON 직접 편집' },
+    { key: '__help', kind: 'help', title: '사용법 · 반영 순서' }
+  ];
+
+  function secByKey(k) {
+    for (var i = 0; i < SECTIONS.length; i++) if (SECTIONS[i].key === k) return SECTIONS[i];
+    return null;
+  }
+  function val(sec) { return (sec.root === 'BOOK' ? ST.BOOK : ST.DATA)[sec.key]; }
+  function setVal(sec, v) { (sec.root === 'BOOK' ? ST.BOOK : ST.DATA)[sec.key] = v; markDirty(); }
+
+  function markDirty() {
+    ST.dirty = true;
+    var d = $('#dirty'); if (d) d.classList.add('on');
+  }
+  function clearDirty() {
+    ST.dirty = false;
+    var d = $('#dirty'); if (d) d.classList.remove('on');
+  }
+
+  /* ══════════ 3. 잠금 화면 ═════════════════════════════ */
+  function lockScreen() {
+    var box = $('#lock');
+    /* 클라우드 모드는 서버가 비밀번호를 확인한다. 페이지의 로그인 폼이 처리하므로
+       여기서는 잠금 화면을 그대로 두고 아무것도 하지 않는다. */
+    if (ST.mode === 'cloud') { box.style.display = 'flex'; return; }
+    if (!CFG.passHash) { box.style.display = 'none'; boot(); return; }
+    box.style.display = 'flex';
+    $('#lock-form').addEventListener('submit', function (e) {
+      e.preventDefault();
+      var pw = $('#lock-pw').value || '';
+      if (hash((CFG.salt || '') + pw) === CFG.passHash) {
+        box.style.display = 'none';
+        boot();
+      } else {
+        $('#lock-err').classList.add('on');
+        $('#lock-pw').value = '';
+        $('#lock-pw').focus();
+      }
+    });
+    setTimeout(function () { $('#lock-pw').focus(); }, 120);
+  }
+
+  /* ══════════ 4. 사이드바 ══════════════════════════════ */
+  function renderSide() {
+    var h = '';
+    SECTIONS.forEach(function (s) {
+      if (s.g) { h += '<div class="side__g">' + esc(s.g) + '</div>'; return; }
+      var v = s.root ? val(s) : null;
+      var n = isArr(v) ? v.length : '';
+      h += '<button type="button" class="side__i' + (ST.sec === s.key ? ' on' : '') +
+        '" data-sec="' + esc(s.key) + '">' +
+        '<span>' + esc(s.title) + '</span>' +
+        (n !== '' ? '<span class="side__n">' + n + '</span>' : '') + '</button>';
+    });
+    $('#side').innerHTML = h;
+  }
+
+  /* ══════════ 5. 본문 ══════════════════════════════════ */
+  function renderBody() {
+    var sec = secByKey(ST.sec);
+    var b = $('#body');
+    if (!sec) { b.innerHTML = ''; return; }
+
+    if (sec.kind === 'assets') { b.innerHTML = viewAssets(); return; }
+    if (sec.kind === 'json') { b.innerHTML = viewJson(); return; }
+    if (sec.kind === 'help') { b.innerHTML = viewHelp(); return; }
+
+    var head = '<div class="body__head"><div class="body__t">' + esc(sec.title) + '</div>' +
+      (sec.desc ? '<div class="body__s">' + esc(sec.desc) + '</div>' : '') + '</div>';
+
+    if (sec.kind === 'object') { b.innerHTML = head + '<div class="card">' + fields(val(sec), sec.key) + '</div>'; return; }
+
+    /* 목록 */
+    var arr = val(sec) || [];
+    if (ST.rec !== null && arr[ST.rec] !== undefined) {
+      b.innerHTML = head +
+        '<div class="card"><div class="row" style="border:0;padding:0;margin-bottom:12px">' +
+          '<button type="button" class="b b--l b--s" data-act="back">← 목록으로</button>' +
+          '<span class="bar__sp"></span>' +
+          '<button type="button" class="b b--d b--s" data-act="del" data-i="' + ST.rec + '">이 항목 삭제</button>' +
+        '</div>' + fields(arr[ST.rec], sec.key + '.' + ST.rec) + '</div>';
+      return;
+    }
+
+    var list = arr.map(function (x, i) {
+      var t = (sec.label ? sec.label(x) : String(x)) || '(제목 없음)';
+      var s = (sec.sub ? sec.sub(x) : '') || '';
+      return '<div class="row">' +
+        '<span class="row__n">' + (i + 1) + '</span>' +
+        '<span class="row__t"><b>' + esc(String(t).slice(0, 70)) + '</b>' +
+          '<span>' + esc(String(s).slice(0, 90)) + '</span></span>' +
+        '<span class="row__acts">' +
+          '<button type="button" class="iq" data-act="up" data-i="' + i + '" title="위로" aria-label="위로 이동">↑</button>' +
+          '<button type="button" class="iq" data-act="down" data-i="' + i + '" title="아래로" aria-label="아래로 이동">↓</button>' +
+          '<button type="button" class="iq" data-act="dup" data-i="' + i + '" title="복제" aria-label="복제">⧉</button>' +
+          '<button type="button" class="iq" data-act="edit" data-i="' + i + '" title="편집" aria-label="편집">✎</button>' +
+          '<button type="button" class="iq iq--d" data-act="del" data-i="' + i + '" title="삭제" aria-label="삭제">✕</button>' +
+        '</span></div>';
+    }).join('');
+
+    b.innerHTML = head +
+      '<div style="margin-bottom:12px"><button type="button" class="b b--p b--s" data-act="add">+ 새 항목 추가</button></div>' +
+      '<div class="rowlist">' + (list || '<div class="note">항목이 없습니다. 위의 «새 항목 추가»를 누르세요.</div>') + '</div>';
+  }
+
+  /* 값에서 폼을 자동 생성한다 (문자열/숫자/불리언/문자열배열/중첩객체) */
+  function fields(obj, path) {
+    if (!isObj(obj)) {
+      return '<div class="f"><label class="f__l" for="v-' + esc(path) + '">값</label>' +
+        '<textarea class="t" id="v-' + esc(path) + '" data-path="' + esc(path) + '" data-kind="raw">' +
+        esc(String(obj)) + '</textarea></div>';
+    }
+    return Object.keys(obj).map(function (k) {
+      var v = obj[k], p = path + '.' + k, id = 'v-' + p.replace(/[^\w.-]/g, '_');
+      var lab = '<label class="f__l" for="' + esc(id) + '">' + esc(LABELS[k] || k) +
+                ' <code>' + esc(k) + '</code></label>';
+
+      if (typeof v === 'boolean') {
+        return '<div class="f"><span class="ck"><input type="checkbox" id="' + esc(id) + '" data-path="' +
+          esc(p) + '" data-kind="bool"' + (v ? ' checked' : '') + '><label for="' + esc(id) + '">' +
+          esc(LABELS[k] || k) + '</label></span></div>';
+      }
+      if (typeof v === 'number') {
+        return '<div class="f">' + lab + '<input class="i" type="number" id="' + esc(id) +
+          '" data-path="' + esc(p) + '" data-kind="num" value="' + esc(v) + '"></div>';
+      }
+      if (isArr(v)) {
+        var allStr = v.every(function (x) { return typeof x === 'string'; });
+        if (allStr) {
+          return '<div class="f">' + lab +
+            '<textarea class="t" id="' + esc(id) + '" data-path="' + esc(p) + '" data-kind="lines">' +
+            esc(v.join('\n')) + '</textarea>' +
+            '<div class="f__h">한 줄에 하나씩 적습니다. 빈 줄은 무시됩니다.</div></div>';
+        }
+        return '<div class="grp"><div class="grp__t">' + esc(LABELS[k] || k) + ' · ' + v.length + '개</div>' +
+          '<div class="f"><textarea class="t t--code" id="' + esc(id) + '" data-path="' + esc(p) +
+          '" data-kind="json">' + esc(JSON.stringify(v, null, 2)) + '</textarea>' +
+          '<div class="f__h">항목이 여러 칸으로 이루어져 있어 JSON 형식으로 편집합니다. ' +
+          '대괄호 [ ] 와 중괄호 { } 와 쉼표를 그대로 두고 따옴표 안의 글만 고치세요.</div></div></div>';
+      }
+      if (isObj(v)) {
+        return '<div class="grp"><div class="grp__t">' + esc(LABELS[k] || k) + '</div>' +
+          '<div class="sub">' + fields(v, p) + '</div></div>';
+      }
+      var long = String(v == null ? '' : v).length > 70;
+      return '<div class="f">' + lab +
+        (long
+          ? '<textarea class="t" id="' + esc(id) + '" data-path="' + esc(p) + '" data-kind="str">' + esc(v) + '</textarea>'
+          : '<input class="i" type="text" id="' + esc(id) + '" data-path="' + esc(p) + '" data-kind="str" value="' + esc(v) + '">') +
+        '</div>';
+    }).join('');
+  }
+
+  var LABELS = {
+    label: '짧은 이름', full: '전체 이름', icon: '아이콘', route: '이동 경로', id: '식별자',
+    title: '제목', name: '이름', desc: '설명', text: '본문', body: '본문', short: '한 줄 요약',
+    q: '질문', a: '답변', lead: '머리글', line: '한 줄 소개', tagline: '슬로건',
+    email: '이메일', nameKo: '기관명(한글)', nameEn: '기관명(영문)', abbr: '약칭',
+    heroLine1: '히어로 1행', heroLine2: '히어로 2행', heroLine3: '히어로 3행', heroSub: '히어로 설명',
+    footerNote: '푸터 표기', badge: '배지 문구', quote: '인용문', tags: '태그', keys: '검색 키워드',
+    author: '작성자', cat: '분류', no: '번호', en: '영문', ko: '한글',
+    price: '정가', publisher: '펴낸곳', isbn: 'ISBN', subtitle: '부제', series: '시리즈',
+    part: '부', blocks: '본문 블록', t: '제목', s: '부제', d: '설명', k: '키워드', c: '분류',
+    action: '동작', accent: '강조 표시', official: '운영팀 공지', status: '상태', file: '파일 경로'
+  };
+
+  /* ══════════ 6. 이미지 · 로고 ═════════════════════════ */
+  function viewAssets() {
+    var b = ST.BOOK.BOOK || {};
+    var cv = b.covers || {};
+    var items = [
+      { k: 'covers.dark', n: '도서 표지 (다크 모드)', v: cv.dark },
+      { k: 'covers.light', n: '도서 표지 (라이트 모드)', v: cv.light },
+      { k: 'covers.thumb', n: '도서 표지 (작은 썸네일)', v: cv.thumb },
+      { k: 'covers.back', n: '뒤표지', v: cv.back },
+      { k: 'covers.spread', n: '펼침 이미지', v: cv.spread }
+    ];
+    return '<div class="body__head"><div class="body__t">이미지 · 로고 교체</div>' +
+      '<div class="body__s">그림 파일을 고르면 파일 안에 그대로 담깁니다. 서버에 따로 올릴 필요가 없습니다.</div></div>' +
+      '<div class="note">권장 크기 — 표지 760×1087, 썸네일 320×458, 공유카드 1200×630. ' +
+      'JPG·PNG·WEBP 를 지원하며 한 장에 1MB 이하를 권합니다.</div>' +
+      items.map(function (it) {
+        return '<div class="card"><div class="row" style="border:0;padding:0">' +
+          '<span class="row__t"><b>' + esc(it.n) + '</b><span>' +
+          esc(String(it.v || '').slice(0, 60)) + '</span></span></div>' +
+          '<div style="margin-top:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">' +
+          (it.v ? '<img src="' + esc(it.v) + '" alt="" style="height:76px;border-radius:8px;border:1px solid var(--a-line)">' : '') +
+          '<input class="i" type="file" accept="image/*" data-img="' + esc(it.k) + '" style="max-width:290px">' +
+          '</div></div>';
+      }).join('') +
+      '<div class="card"><div class="body__t" style="font-size:15px;margin-bottom:8px">심볼 로고 (SVG)</div>' +
+      '<div class="body__s" style="margin-bottom:10px">색만 바꾸시려면 아래 코드에서 #1f62d6(파랑) · #12bcd6(청록) · ' +
+      '#f8d478~#d99a12(골드) 값을 원하는 색으로 고치신 뒤 «심볼 로고 내려받기»를 누르세요. ' +
+      '내려받은 kahugo-mark.svg 를 배포 폴더의 assets 안에 덮어쓰면 됩니다.</div>' +
+      '<textarea class="t t--code t--big" id="logo-svg">' + esc(SRC.ASSETS && SRC.ASSETS.mark || '') + '</textarea>' +
+      '<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">' +
+      '<button type="button" class="b b--g b--s" data-act="logo-prev">미리보기</button>' +
+      '<button type="button" class="b b--p b--s" data-act="logo-dl">심볼 로고 내려받기</button></div>' +
+      '<div id="logo-box" style="margin-top:12px;display:flex;gap:16px;align-items:center"></div></div>';
+  }
+
+  /* ══════════ 7. JSON 직접 편집 ════════════════════════ */
+  function viewJson() {
+    return '<div class="body__head"><div class="body__t">고급 — JSON 직접 편집</div>' +
+      '<div class="body__s">폼에서 다루기 어려운 부분을 직접 고칩니다. 형식이 깨지면 저장되지 않고 오류를 알려 드립니다.</div></div>' +
+      '<div class="note note--gold">이 화면은 익숙하신 분만 사용하세요. 되돌리려면 아래쪽 «원본으로 되돌리기»를 누르시면 됩니다.</div>' +
+      '<div class="card"><div class="f"><label class="f__l" for="j-data">플랫폼 콘텐츠 (DATA)</label>' +
+      '<textarea class="t t--code t--big" id="j-data">' + esc(JSON.stringify(ST.DATA, null, 2)) + '</textarea></div>' +
+      '<button type="button" class="b b--g b--s" data-act="json-apply" data-r="DATA">DATA 적용</button></div>' +
+      '<div class="card"><div class="f"><label class="f__l" for="j-book">도서 콘텐츠 (BOOK)</label>' +
+      '<textarea class="t t--code t--big" id="j-book">' + esc(JSON.stringify(ST.BOOK, null, 2)) + '</textarea></div>' +
+      '<button type="button" class="b b--g b--s" data-act="json-apply" data-r="BOOK">BOOK 적용</button></div>';
+  }
+
+  /* ══════════ 8. 사용법 ════════════════════════════════ */
+  function viewHelp() {
+    var offline =
+      '<ol class="steps">' +
+      '<li>왼쪽에서 고칠 항목을 고르고 내용을 바꿉니다.</li>' +
+      '<li>아래 «미리보기»를 눌러 실제 사이트 화면에서 확인합니다.</li>' +
+      '<li>마음에 들면 «내보내기 — data.js» 와 «내보내기 — book.js» 를 누릅니다.</li>' +
+      '<li>배포용 ZIP 을 풀고 그 안의 data.js · book.js 를 내려받은 파일로 덮어씁니다.</li>' +
+      '<li>다시 압축해 Cloudflare Pages 에 올리면 사이트에 반영됩니다.</li>' +
+      '<li>화면이 그대로면 sw.js 의 kahugo-v2-2-0 을 v2-2-1 로 바꿔 다시 올리세요.</li>' +
+      '</ol>';
+    var cloud =
+      '<ol class="steps">' +
+      '<li>왼쪽에서 고칠 항목을 고르고 내용을 바꿉니다.</li>' +
+      '<li>«미리보기»로 확인합니다.</li>' +
+      '<li>«저장(사이트 반영)» 을 누르면 곧바로 kahugo.com 에 적용됩니다.</li>' +
+      '<li>되돌리려면 «원본으로 되돌리기» 를 누른 뒤 다시 저장하세요.</li>' +
+      '</ol>';
+    return '<div class="body__head"><div class="body__t">사용법 · 반영 순서</div></div>' +
+      '<div class="card">' + (ST.mode === 'cloud' ? cloud : offline) + '</div>' +
+      '<div class="note note--danger">이 관리자 화면은 원본 파일을 직접 고치지 않습니다. ' +
+      '«덮어쓸 내용»만 따로 만들어 내므로, 잘못 고쳐도 «원본으로 되돌리기» 한 번이면 처음 상태로 돌아갑니다.</div>' +
+      '<div class="note">문의 habibot@naver.com</div>';
+  }
+
+  /* ══════════ 9. 값 쓰기 ═══════════════════════════════ */
+  function writePath(path, kind, raw) {
+    var parts = path.split('.');
+    var root = parts.shift();                    /* 섹션 키 */
+    var sec = secByKey(root);
+    if (!sec) return;
+    var target = (sec.root === 'BOOK' ? ST.BOOK : ST.DATA)[root];
+    var last = parts.pop();
+    parts.forEach(function (p) { target = target[isArr(target) ? Number(p) : p]; });
+    var v = raw;
+    if (kind === 'num') v = Number(raw);
+    else if (kind === 'bool') v = !!raw;
+    else if (kind === 'lines') v = String(raw).split('\n').map(function (s) { return s.trim(); })
+                                              .filter(function (s) { return s.length; });
+    else if (kind === 'json') {
+      try { v = JSON.parse(raw); }
+      catch (e) { toast('형식 오류: ' + e.message, 'err'); return; }
+    }
+    target[isArr(target) ? Number(last) : last] = v;
+    markDirty();
+  }
+
+  /* ══════════ 10. 미리보기 ═════════════════════════════ */
+  function previewDoc() {
+    var P = SRC.PARTS || {};
+    var ov = JSON.stringify({ DATA: ST.DATA, BOOK: ST.BOOK }).replace(/<\//g, '<\\/');
+    return '<!DOCTYPE html><html lang="ko" data-theme="dark"><head><meta charset="utf-8">' +
+      '<meta name="viewport" content="width=device-width, initial-scale=1">' +
+      '<title>KAHUGO 미리보기</title><style>' + (P.css || '') + '</style></head><body>' +
+      (P.shell || '') +
+      '<script>window.KAHUGO_OVERRIDE=' + ov + ';<\/script>' +
+      '<script>' + (P.data || '') + '<\/script>' +
+      '<script>' + (P.book || '') + '<\/script>' +
+      '<script>' + (P.app || '') + '<\/script>' +
+      '</body></html>';
+  }
+  /* 클라우드 모드에서는 플랫폼 파일을 그때 한 번만 받아 와 미리보기를 만든다. */
+  function ensureParts() {
+    var P = SRC.PARTS || (SRC.PARTS = {});
+    if (P.app) return Promise.resolve(P);
+    if (!/^https?:/i.test(location.protocol) || !window.fetch) return Promise.resolve(null);
+    var base = CFG.baseUrl || '../';
+    function get(u) { return fetch(base + u).then(function (r) { return r.ok ? r.text() : ''; }); }
+    return Promise.all([get('styles.css'), get('data.js'), get('book.js'), get('app.js'), get('index.html')])
+      .then(function (a) {
+        P.css = a[0]; P.data = a[1]; P.book = a[2]; P.app = a[3];
+        try {
+          var doc = new DOMParser().parseFromString(a[4], 'text/html');
+          Array.prototype.slice.call(doc.body.querySelectorAll('script')).forEach(function (s2) { s2.remove(); });
+          P.shell = doc.body.innerHTML;
+        } catch (e) { P.shell = ''; }
+        /* 상대경로 자산이 미리보기 안에서도 열리도록 기준 경로를 바꾼다 */
+        P.shell = String(P.shell || '').replace(/(src|href)="assets\//g, '$1="' + base + 'assets/');
+        return P.app ? P : null;
+      }).catch(function () { return null; });
+  }
+
+  function openPreview() {
+    var P = SRC.PARTS || {};
+    if (P.app) { $('#pv').classList.add('on'); $('#pv-frame').srcdoc = previewDoc(); return; }
+    toast('미리보기를 준비하는 중입니다…');
+    ensureParts().then(function (ok) {
+      if (!ok) { window.open(CFG.previewUrl || '/', '_blank', 'noopener'); return; }
+      $('#pv').classList.add('on');
+      $('#pv-frame').srcdoc = previewDoc();
+    });
+  }
+
+  /* ══════════ 11. 내보내기 ═════════════════════════════ */
+  /* 원본 data.js 의 buildSearchIndex 를 그대로 다시 심는다.
+     직접 다시 구현하면 원본이 바뀔 때 색인이 어긋나므로, 빌드 시 뽑아 둔
+     함수 소스를 그대로 쓰고 컬렉션 이름만 편집본에 연결한다. */
+  var INDEX_LOCALS = ['INSTITUTE', 'DECLARATIONS', 'RESEARCH', 'LABS', 'PROGRAMS',
+                      'PUBLICATIONS', 'ROADMAP', 'VALUE_TABS', 'MEMBERSHIP',
+                      'DIAGNOSTIC', 'FAQ', 'CATEGORIES', 'INTERESTS'];
+
+  function jsFile(globalName, obj) {
+    var isData = globalName === 'KAHUGO_DATA';
+    var tail;
+    if (isData && SRC.INDEX_FN) {
+      tail = '  var ' + INDEX_LOCALS.map(function (k) { return k + ' = C.' + k + ' || []'; }).join(',\n      ') + ';\n' +
+             SRC.INDEX_FN + '\n' +
+             '  C.SEARCH_INDEX = buildSearchIndex();\n' +
+             '  global.KAHUGO_BUILD_INDEX = buildSearchIndex;\n';
+    } else if (isData) {
+      tail = '  C.SEARCH_INDEX = C.SEARCH_INDEX || [];\n';
+    } else {
+      tail = '  C.PREVIEW_PAGES = (C.BOOK_PREVIEW || []).length;\n';
+    }
+    return '/* ============================================================\n' +
+      '   KAHUGO — 관리자 모드에서 내보낸 콘텐츠 파일\n' +
+      '   이 파일은 원래의 ' + globalName + ' 를 그대로 대체합니다.\n' +
+      '   배포 폴더에 같은 이름으로 덮어쓰십시오.\n' +
+      '   ============================================================ */\n' +
+      '(function (global) {\n  \'use strict\';\n' +
+      '  var C = ' + JSON.stringify(obj, null, 2).split('\n').join('\n  ') + ';\n' +
+      tail +
+      '  global.' + globalName + ' = C;\n})(window);\n';
+  }
+
+  /* ══════════ 12. 클라우드 저장 ════════════════════════ */
+  function cloudLogin(pw) {
+    return fetch('/api/login', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw })
+    }).then(function (r) { return r.json(); });
+  }
+  function cloudSave() {
+    if (!ST.token) { toast('먼저 로그인해 주세요', 'warn'); return; }
+    var btn = $('#btn-save'); if (btn) btn.disabled = true;
+    fetch('/api/content', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + ST.token },
+      body: JSON.stringify({ content: { DATA: ST.DATA, BOOK: ST.BOOK } })
+    }).then(function (r) { return r.json(); })
+      .then(function (j) {
+        if (btn) btn.disabled = false;
+        if (j && j.ok) { clearDirty(); toast('저장했습니다 · 사이트에 반영되었습니다', 'ok'); }
+        else { toast('저장 실패: ' + ((j && j.error) || '알 수 없는 오류'), 'err'); }
+      })
+      .catch(function (e) { if (btn) btn.disabled = false; toast('저장 실패: ' + e.message, 'err'); });
+  }
+  function cloudLoad() {
+    return fetch('/api/content').then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        if (j && j.content) {
+          if (j.content.DATA) Object.keys(j.content.DATA).forEach(function (k) { ST.DATA[k] = j.content.DATA[k]; });
+          if (j.content.BOOK) Object.keys(j.content.BOOK).forEach(function (k) { ST.BOOK[k] = j.content.BOOK[k]; });
+          toast('저장된 내용을 불러왔습니다', 'ok');
+        }
+      }).catch(function () {});
+  }
+
+  /* ══════════ 13. 원본 복원 ════════════════════════════ */
+  function resetAll() {
+    if (!confirm('편집한 내용을 모두 버리고 처음 상태로 되돌립니다. 계속할까요?')) return;
+    ST.DATA = clone(SRC.DATA || {});
+    ST.BOOK = clone(SRC.BOOK || {});
+    ST.rec = null; clearDirty();
+    renderSide(); renderBody();
+    toast('원본으로 되돌렸습니다', 'ok');
+  }
+
+  /* ══════════ 14. 이벤트 ═══════════════════════════════ */
+  function bind() {
+    document.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-sec]');
+      if (t) { ST.sec = t.getAttribute('data-sec'); ST.rec = null; renderSide(); renderBody(); $('#body').scrollTop = 0; return; }
+
+      var a = e.target.closest('[data-act]');
+      if (!a) return;
+      var act = a.getAttribute('data-act');
+      var i = a.hasAttribute('data-i') ? Number(a.getAttribute('data-i')) : -1;
+      var sec = secByKey(ST.sec);
+      var arr = sec && sec.kind === 'list' ? val(sec) : null;
+
+      if (act === 'edit') { ST.rec = i; renderBody(); $('#body').scrollTop = 0; }
+      else if (act === 'back') { ST.rec = null; renderBody(); }
+      else if (act === 'up' && arr && i > 0) { arr.splice(i - 1, 0, arr.splice(i, 1)[0]); markDirty(); renderBody(); }
+      else if (act === 'down' && arr && i < arr.length - 1) { arr.splice(i + 1, 0, arr.splice(i, 1)[0]); markDirty(); renderBody(); }
+      else if (act === 'dup' && arr) { arr.splice(i + 1, 0, clone(arr[i])); markDirty(); renderSide(); renderBody(); }
+      else if (act === 'del' && arr) {
+        if (!confirm('이 항목을 삭제합니다. 계속할까요?')) return;
+        arr.splice(i, 1); ST.rec = null; markDirty(); renderSide(); renderBody();
+      }
+      else if (act === 'add' && arr) {
+        var base = arr.length ? clone(arr[arr.length - 1]) : {};
+        Object.keys(base).forEach(function (k) {
+          if (typeof base[k] === 'string') base[k] = '';
+          else if (isArr(base[k])) base[k] = [];
+        });
+        if (base.id !== undefined) base.id = 'new' + (arr.length + 1);
+        arr.push(base); ST.rec = arr.length - 1; markDirty(); renderSide(); renderBody();
+      }
+      else if (act === 'preview') openPreview();
+      else if (act === 'pv-close') $('#pv').classList.remove('on');
+      else if (act === 'pv-w') {
+        $('#pv-frame').parentNode.className = 'pv__frame ' + (a.getAttribute('data-w') || '');
+        $$('[data-act="pv-w"]').forEach(function (x) { x.className = 'b b--l b--s'; });
+        a.className = 'b b--p b--s';
+      }
+      else if (act === 'reset') resetAll();
+      else if (act === 'exp-data') { download('data.js', jsFile('KAHUGO_DATA', ST.DATA), 'text/javascript'); toast('data.js 를 내려받았습니다', 'ok'); }
+      else if (act === 'exp-book') { download('book.js', jsFile('KAHUGO_BOOK', ST.BOOK), 'text/javascript'); toast('book.js 를 내려받았습니다', 'ok'); }
+      else if (act === 'exp-json') { download('kahugo-content.json', JSON.stringify({ DATA: ST.DATA, BOOK: ST.BOOK }, null, 2), 'application/json'); toast('백업 파일을 내려받았습니다', 'ok'); }
+      else if (act === 'save') cloudSave();
+      else if (act === 'json-apply') {
+        var r = a.getAttribute('data-r');
+        var ta = $(r === 'DATA' ? '#j-data' : '#j-book');
+        try {
+          var parsed = JSON.parse(ta.value);
+          if (r === 'DATA') ST.DATA = parsed; else ST.BOOK = parsed;
+          markDirty(); renderSide(); toast(r + ' 를 적용했습니다', 'ok');
+        } catch (err) { toast('JSON 형식 오류: ' + err.message, 'err'); }
+      }
+      else if (act === 'logo-prev') {
+        $('#logo-box').innerHTML =
+          '<div style="background:#060f1e;padding:14px;border-radius:12px">' + $('#logo-svg').value + '</div>' +
+          '<div style="background:#fff;padding:14px;border-radius:12px">' + $('#logo-svg').value + '</div>';
+        $$('#logo-box svg').forEach(function (s) { s.style.width = '72px'; s.style.height = '72px'; });
+      }
+      else if (act === 'logo-dl') { download('kahugo-mark.svg', $('#logo-svg').value, 'image/svg+xml'); toast('kahugo-mark.svg 를 내려받았습니다', 'ok'); }
+    });
+
+    document.addEventListener('change', function (e) {
+      var el = e.target;
+      if (el.hasAttribute && el.hasAttribute('data-path')) {
+        writePath(el.getAttribute('data-path'), el.getAttribute('data-kind'),
+                  el.type === 'checkbox' ? el.checked : el.value);
+        return;
+      }
+      if (el.hasAttribute && el.hasAttribute('data-img') && el.files && el.files[0]) {
+        var key = el.getAttribute('data-img');
+        var f = el.files[0];
+        if (f.size > 3 * 1024 * 1024) { toast('3MB 이하 이미지를 사용해 주세요', 'warn'); return; }
+        var rd = new FileReader();
+        rd.onload = function () {
+          var seg = key.split('.');
+          var o = ST.BOOK.BOOK;
+          for (var i = 0; i < seg.length - 1; i++) { o[seg[i]] = o[seg[i]] || {}; o = o[seg[i]]; }
+          o[seg[seg.length - 1]] = rd.result;
+          markDirty(); renderBody();
+          toast('이미지를 바꿨습니다 · 미리보기로 확인하세요', 'ok');
+        };
+        rd.readAsDataURL(f);
+      }
+    });
+
+    W.addEventListener('beforeunload', function (e) {
+      if (!ST.dirty) return;
+      e.preventDefault(); e.returnValue = '';
+    });
+  }
+
+  /* ══════════ 15. 시작 ═════════════════════════════════ */
+  function boot() {
+    ST.DATA = clone(SRC.DATA || {});
+    ST.BOOK = clone(SRC.BOOK || {});
+    ST.sec = 'NAV';
+    $('#wrap').style.display = 'flex';
+    renderSide(); renderBody(); bind();
+    if (ST.mode === 'cloud') cloudLoad();
+  }
+
+  W.KAHUGO_ADMIN = { boot: boot, lock: lockScreen, state: ST, hash: hash, setToken: function (t) { ST.token = t; }, login: cloudLogin };
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', lockScreen);
+  else lockScreen();
+})(window);
+
+</script>
+
+<script>
+/* ══════════ 로그인 처리 ══════════ */
+document.getElementById('cloud-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  var err = document.getElementById('cloud-err');
+  var pw = document.getElementById('cloud-pw').value || '';
+  err.classList.remove('on'); err.textContent = '';
+  window.KAHUGO_ADMIN.login(pw).then(function (j) {
+    if (j && j.ok && j.token) {
+      window.KAHUGO_ADMIN.setToken(j.token);
+      document.getElementById('lock').style.display = 'none';
+      window.KAHUGO_ADMIN.boot();
+    } else {
+      err.textContent = (j && j.error) || '로그인에 실패했습니다.';
+      err.classList.add('on');
+      document.getElementById('cloud-pw').value = '';
+    }
+  }).catch(function () {
+    err.textContent = '서버에 연결하지 못했습니다. functions 폴더가 올라갔는지 확인해 주세요.';
+    err.classList.add('on');
+  });
+});
+</script>
+</body>
+</html>
