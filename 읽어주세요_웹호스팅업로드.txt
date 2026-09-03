@@ -1,0 +1,48 @@
+════════════════════════════════════════════
+  한국AI휴먼전략연구원 KAHUGO · v3.2
+  일반 웹호스팅 업로드용 패키지
+════════════════════════════════════════════
+
+■ 올리는 방법
+  이 폴더 '안의 내용물 전부'를 웹호스팅의 public_html
+  (또는 www / htdocs) 폴더에 그대로 올립니다.
+  폴더째로 올리지 말고, 안의 파일들만 올리세요.
+
+■ 반드시 함께 올려야 하는 것
+  index.html          첫 화면
+  styles.css          디자인
+  data.js             기관 정보 · 메뉴 (여기만 고치면 글자가 바뀝니다)
+  book.js             도서 서브퍼널
+  content-futures.js      미래예측 18가지 (원고 전문)
+  content-lexicon.js      낱말집 50 (원고 전문)
+  content-opps.js         사업 기회 30 (원고 전문)
+  content-news.js         뉴스레터 25호 편성
+  content-manuscript.js   본문 37장 (원고 전문)
+  views-v3.js         신설 코너 화면
+  app.js              전체 기능
+  assets/             표지 · 로고 · 아이콘 (폴더째)
+  manifest.webmanifest / sw.js  앱 설치용
+  robots.txt / sitemap.xml      검색 노출용
+  favicon.ico          브라우저 탭 아이콘
+  .htaccess           캐시 · 압축 설정 (Apache 호스팅만)
+
+■ Cloudflare Pages를 쓰신다면
+  functions/ 폴더도 함께 올리면 관리자 모드 실시간 편집(B안)과
+  여러 기기 회원승인 동기화가 가능해집니다. 다른 일반 웹호스팅에서는
+  이 폴더를 지워도 사이트는 100% 그대로 작동합니다(정적 배포 모드).
+  자세한 절차는 "카후고_배포가이드_Cloudflare_GitHub.docx" 참고.
+
+■ 주의
+  · index.html 만 따로 옮기면 화면이 깨집니다. 반드시 전부 함께.
+  · 파일을 컴퓨터에서 더블클릭해 열면 정상 표시되지 않습니다.
+    반드시 http:// 또는 https:// 주소로 접속하세요.
+    (더블클릭으로 열어야 한다면 kahugo-standalone.html 을 여세요.)
+  · 텍스트를 고칠 때는 반드시 UTF-8 로 저장하세요. (한글 깨짐 예방)
+
+■ 관리자 모드
+  admin 폴더를 함께 올리면 https://내도메인/admin/ 으로 접속됩니다.
+  기본 비밀번호 kahugo2026!  → 로그인 후 즉시 변경하세요.
+
+■ 문의
+  habibot@gmail.com
+  © 2026 Korea AI Human Strategy Institute.

@@ -143,14 +143,20 @@
     prev: '<path d="m14.6 5.6-6.4 6.4 6.4 6.4"/>',
     list: '<path d="M8.4 6.6h11.4M8.4 12h11.4M8.4 17.4h11.4"/><path d="M4.4 6.6h.01M4.4 12h.01M4.4 17.4h.01"/>',
     cart: '<circle cx="9.6" cy="19.2" r="1.4"/><circle cx="17.4" cy="19.2" r="1.4"/><path d="M2.6 3.8h2.6l2.4 11.4h11l2.2-8.2H6.4"/>',
-    highlight: '<path d="m14.2 4.6 5.2 5.2-8.6 8.6-5.2-5.2z"/><path d="M4.4 20.2h6"/><path d="m11.6 7.2 5.2 5.2"/>'
+    highlight: '<path d="m14.2 4.6 5.2 5.2-8.6 8.6-5.2-5.2z"/><path d="M4.4 20.2h6"/><path d="m11.6 7.2 5.2 5.2"/>',
+    eye: '<path d="M2.4 12S6 5.4 12 5.4 21.6 12 21.6 12 18 18.6 12 18.6 2.4 12 2.4 12z"/><circle cx="12" cy="12" r="3.1"/>',
+    sunrise: '<path d="M12 3.2v4.2"/><path d="M5.6 6.4 8 8.8M18.4 6.4 16 8.8"/><circle cx="12" cy="14" r="3.6"/><path d="M2.8 20.2h18.4M4.4 14h2.2M17.4 14h2.2"/>',
+    edit: '<path d="M12 20.2h8"/><path d="M16.4 3.9a2.2 2.2 0 0 1 3.1 3.1L8.6 17.9l-4 1 1-4z"/>',
+    refresh: '<path d="M4.4 12a7.6 7.6 0 0 1 12.8-5.5l2 1.9"/><path d="M19.6 5.4v4.4h-4.4"/><path d="M19.6 12a7.6 7.6 0 0 1-12.8 5.5l-2-1.9"/><path d="M4.4 18.6v-4.4h4.4"/>',
+    unlock: '<rect x="4.6" y="10.4" width="14.8" height="9.8" rx="2.2"/><path d="M8.2 10.4V7.8a3.8 3.8 0 0 1 7.2-1.7"/>',
+    laurel: '<path d="M12 4.4v15.2"/><path d="M12 6.6c-2.4-2-5-1.6-6.4.4-1.4 2 .2 4 2 3.6-1.6 1.8-1 4 1.2 4.4-1 2 .6 3.8 3.2 3.2"/><path d="M12 6.6c2.4-2 5-1.6 6.4.4 1.4 2-.2 4-2 3.6 1.6 1.8 1 4-1.2 4.4 1 2-.6 3.8-3.2 3.2"/>'
   };
 
   function ic(name, cls) {
     var d = P[name] || P.info;
     return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" ' +
       'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"' +
-      (cls ? ' class="' + attr(cls) + '"' : '') + '>' + d + '</svg>';
+      ' class="ico' + (cls ? ' ' + attr(cls) : '') + '">' + d + '</svg>';
   }
 
   /* ══════════ §3. 전역 상태 ═══════════════════════════════ */
@@ -205,8 +211,9 @@
     }, 2600);
   }
 
-  var scrollY = 0;
+  var scrollY = 0, _skipRestore = false;
   function lockScroll(on) {
+    if (on === 'release') { _skipRestore = true; on = false; }
     if (on) {
       scrollY = window.scrollY || window.pageYOffset || 0;
       document.body.classList.add('is-locked');
@@ -214,9 +221,13 @@
       document.body.style.position = 'fixed';
       document.body.style.width = '100%';
     } else {
+      var was = document.body.classList.contains('is-locked');
       document.body.classList.remove('is-locked');
       document.body.style.position = ''; document.body.style.top = ''; document.body.style.width = '';
-      window.scrollTo(0, scrollY);
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+      if (was && !_skipRestore) window.scrollTo(0, scrollY);
+      _skipRestore = false;
     }
   }
 
@@ -333,6 +344,11 @@
 
   function go(route) {
     if (!route) return;
+    /* 모달·패널 안의 이동 버튼이 오버레이를 남겨 스크롤이 잠기던 버그를 원천 차단한다.
+       (닫기 → 잠금 해제 → 이동 순서를 어떤 경로에서도 보장) */
+    if ($('.panel.is-open')) closePanel();
+    if ($('.modal.is-open')) closeModal();
+    if (document.body.classList.contains('is-locked')) lockScroll(false);
     markScroll();
     if (location.hash === route) { render(); return; }
     try { location.hash = route; }
@@ -750,6 +766,14 @@
         '<a class="btn btn--accent" href="#/diagnosis">' + ic('gauge') + '30초 자가진단 시작</a>' +
         '<a class="btn btn--ghost" href="#/research">' + ic('compass') + '12대 아젠다 보기</a>' +
       '</div>' +
+    '</div></div></section>' +
+
+    /* 신뢰 배지 3종 — 시각적 디테일 강화(로렐 리스), 라이트/다크 공통 남색 밴드 */
+    '<section class="laurels"><div class="wrap"><div class="laurels__in">' +
+      D.INSTITUTE.trustBadges.map(function (t) {
+        return '<div class="laurel reveal">' + ic('laurel') +
+          '<span>' + esc(t.l1) + '<br>' + esc(t.l2) + '</span></div>';
+      }).join('') +
     '</div></div></section>' +
 
     /* 이어서 하기 (재방문자) */
@@ -1759,6 +1783,24 @@
   }
 
   /* ── 책 소개 (메인 퍼널) ── */
+  /* 책 전체보기(5~37장) 승인 상태 배지 — v3 모듈(views-v3.js)이 관리하는
+     상태를 읽기만 한다. 아직 로드 전이면 조용히 빈 문자열을 낸다. */
+  function bookAccessBanner() {
+    var v3 = window.KAHUGO_V3 && window.KAHUGO_V3.state;
+    var u = v3 && v3.user;
+    var st = u ? (u.bookAccess || 'none') : 'guest';
+    var map = {
+      approved:  { cls: 'badge--gold badge--dot', t: '책전체보기 승인됨 · 5~37장 열람 가능', act: '' },
+      requested: { cls: 'badge--gold badge--dot', t: '책전체보기 승인 대기 중', act: '<button type="button" class="btn btn--line btn--sm" data-action="v3-access-recheck">' + ic('info') + '확인</button>' },
+      denied:    { cls: 'badge--gold badge--dot', t: '책전체보기 신청 보류됨', act: '<button type="button" class="btn btn--line btn--sm" data-action="v3-access-request">' + ic('info') + '다시 신청</button>' },
+      none:      { cls: 'badge--gold badge--dot', t: '5장부터는 책전체보기 신청이 필요합니다', act: '<button type="button" class="btn btn--line btn--sm" data-action="v3-access-request">' + ic('info') + '신청하기</button>' },
+      guest:     { cls: 'badge--gold badge--dot', t: '1~4장은 무료, 5장부터는 로그인 후 신청이 필요합니다', act: '<button type="button" class="btn btn--line btn--sm" data-action="v3-goto-login">' + ic('info') + '로그인</button>' }
+    };
+    var m = map[st] || map.none;
+    return '<div class="row" style="margin-top:10px;align-items:center">' +
+      '<span class="badge ' + m.cls + '">' + esc(m.t) + '</span>' + m.act + '</div>';
+  }
+
   function viewBook(r) {
     if (!BK) return viewNotFound('book');
     var B = BK.BOOK;
@@ -1798,6 +1840,7 @@
           '<a class="btn btn--accent" href="#/preview">' + ic('pages') + BK.PREVIEW_PAGES + '쪽 미리보기 시작</a>' +
           '<button type="button" class="btn btn--ghost" data-action="book-tab" data-s="toc">' + ic('list') + '전체 목차</button>' +
         '</div>' +
+        bookAccessBanner() +
         '<p class="bkhero__by">' + esc(B.author) + ' 지음</p>' +
       '</div>' +
     '</div></div></section>' +
@@ -1979,10 +2022,8 @@
         '<tr><th style="width:104px">제목</th><td>' + esc(B.title) + '</td></tr>' +
         '<tr><th>부제</th><td>' + esc(B.subtitle) + '</td></tr>' +
         '<tr><th>지은이</th><td>' + esc(B.author) + '</td></tr>' +
-        '<tr><th>펴낸곳</th><td>' + esc(B.publisher) + '</td></tr>' +
         '<tr><th>분류</th><td>' + esc(B.category) + '</td></tr>' +
         '<tr><th>구성</th><td>' + esc(B.spec) + '</td></tr>' +
-        '<tr><th>ISBN</th><td style="font-family:var(--font-num);font-size:12px">' + esc(B.isbn) + '</td></tr>' +
       '</tbody></table></div>' +
       '<div class="grid grid--3" style="margin-top:20px">' +
         B.pubNote.map(function (n) {
@@ -2644,6 +2685,7 @@
   }
 
   function registerSW() {
+    if (window.KAHUGO_NO_SW) return;   /* 단일 파일 버전은 서비스워커를 쓰지 않는다 */
     if (!('serviceWorker' in navigator)) return;
     if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') return;
     window.addEventListener('load', function () {
@@ -2654,20 +2696,21 @@
   /* ══════════ §14. 부트스트랩 ═══════════════════════════ */
   function buildShell() {
     /* 상단 아이콘바 */
+    /* 375px 축약 규칙 — deskOnly 아이콘(서재)은 좁은 화면에서 숨기고 하단 탭이 대신한다 */
     var iconbar = D.ICON_ACTIONS.map(function (a) {
       var extra = a.route ? ' data-route="' + attr(a.route) + '"' : '';
-      var badge = (a.id === 'contact') ? '' : '';
       var id = (a.id === 'theme') ? ' data-action="toggle-theme"' : ' data-action="' + attr(a.action) + '"';
-      return '<button type="button" class="iconbtn' + (a.id === 'chat' ? ' iconbtn--accent' : '') + '"' + id + extra +
+      var dot = '';
+      return '<button type="button" class="iconbtn' +
+        (a.id === 'chat' ? ' iconbtn--accent' : '') +
+        (a.deskOnly ? ' iconbtn--desk' : '') + '"' + id + extra +
         ' aria-label="' + attr(a.aria) + '">' + ic(a.icon) +
-        '<span class="iconbtn__label">' + esc(a.label) + '</span>' + badge + '</button>';
+        '<span class="iconbtn__label">' + esc(a.label) + '</span>' + dot + '</button>';
     }).join('');
 
     $('#iconbar').innerHTML =
-      '<button type="button" class="iconbtn" id="install-btn" data-action="install-pwa" aria-label="앱으로 설치하기" style="display:none">' +
+      '<button type="button" class="iconbtn iconbtn--desk" id="install-btn" data-action="install-pwa" aria-label="앱으로 설치하기" style="display:none">' +
       ic('install') + '<span class="iconbtn__label">설치</span></button>' +
-      '<a class="iconbtn iconbtn--my" href="#/my" aria-label="내 서재 열기">' + ic('bookmark') +
-      '<span class="iconbtn__label">서재</span><span class="iconbtn__dot" id="alert-dot" style="display:none">0</span></a>' +
       iconbar;
 
     /* 2단 대메뉴 */
@@ -2676,10 +2719,11 @@
         ic(n.icon) + '<span>' + esc(n.label) + '</span></a>';
     }).join('');
 
-    /* 하단 탭바 */
+    /* 하단 탭바 — '내 서재' 탭에 발행 알림 배지(alert-dot)를 부착한다 */
     $('#bottomnav').innerHTML = D.BOTTOM_NAV.map(function (n) {
+      var dot = (n.id === 'my') ? '<span class="iconbtn__dot bottomnav__dot" id="alert-dot" style="display:none">0</span>' : '';
       return '<a class="bottomnav__item' + (n.accent ? ' bottomnav__item--book' : '') + '" href="' + attr(n.route) + '" data-nav="' + attr(n.id) + '">' +
-        ic(n.icon) + '<span>' + esc(n.label) + '</span></a>';
+        '<span class="bottomnav__ic">' + ic(n.icon) + dot + '</span><span>' + esc(n.label) + '</span></a>';
     }).join('');
 
     /* 검색 패널 */
@@ -2708,13 +2752,16 @@
           D.NAV.map(function (n) { return '<a class="foot__link" href="' + attr(n.route) + '">' + esc(n.full) + '</a>'; }).join('') +
         '</div>' +
         '<div><div class="foot__h">참여·협력</div>' +
+          '<a class="foot__link" href="#/newsletter">뉴스레터 구독 (무료)</a>' +
           '<a class="foot__link" href="#/book">제5의 물결 · 도서 소개</a>' +
-          '<a class="foot__link" href="#/preview">도서 미리보기 (무료)</a>' +
+          '<a class="foot__link" href="#/covers">표지 갤러리</a>' +
+          '<a class="foot__link" href="#/community">커뮤니티</a>' +
           '<a class="foot__link" href="#/diagnosis">AI휴먼전략 자가진단</a>' +
-          '<a class="foot__link" href="#/my">내 서재</a>' +
+          '<a class="foot__link" href="#/research">연구 허브</a>' +
+          '<a class="foot__link" href="#/programs">4대 사업축</a>' +
           '<a class="foot__link" href="#/about">연구원 소개</a>' +
-          '<a class="foot__link" href="#/partnership">협력·파트너십</a>' +
           '<a class="foot__link" href="#/contact">협력·문의하기</a>' +
+          '<a class="foot__link" href="#/more">더보기 (전체 메뉴)</a>' +
           '<button type="button" class="foot__link" data-action="env-help" style="text-align:left;width:100%">이동이 막히나요?</button>' +
         '</div>' +
       '</div>' +
@@ -2852,6 +2899,13 @@
 
   function boot() {
     applyOverride(window.KAHUGO_OVERRIDE);   /* 관리자 미리보기 주입분 */
+    /* v3 확장 모듈 설치 — 신규 코너(미래예측·낱말집·사업기회·뉴스레터·본문리더) */
+    if (window.KAHUGO_V3 && typeof window.KAHUGO_V3.install === 'function') {
+      try {
+        window.KAHUGO_V3.install(window.KAHUGO_APP);
+        window.KAHUGO_ROUTES = Object.keys(ROUTES);   /* 확장 라우트까지 반영 */
+      } catch (e) { console.error('[KAHUGO] v3 확장 설치 실패', e); }
+    }
     applyTheme(S.theme);
     buildShell();
     applyTheme(S.theme);   /* 셸 생성 후 토글 버튼 라벨·아이콘을 현재 테마에 맞춤 */
@@ -2866,14 +2920,26 @@
     if (!safeStore.available()) {
       setTimeout(function () { toast('브라우저 저장이 제한된 환경입니다. 새로고침 시 초기화됩니다.', 'warn'); }, 900);
     }
-    console.log('%cKAHUGO Platform v2.2','color:#2fd4e8;font-weight:bold', '· 경로', Object.keys(ROUTES).length, '· 액션', Object.keys(ACTIONS).length, '· 검색', D.SEARCH_INDEX.length);
+    console.log('%cKAHUGO Platform v3.0','color:#2fd4e8;font-weight:bold', '· 경로', Object.keys(ROUTES).length, '· 액션', Object.keys(ACTIONS).length, '· 검색', D.SEARCH_INDEX.length);
   }
 
-  /* 전역 노출 — 빌드 게이트 · QA 스크립트가 참조 */
+  /* 전역 노출 — 확장 모듈(views-v3.js) · 빌드 게이트 · QA 스크립트가 참조
+     ★ v3 확장 모듈은 이 브리지만 사용한다. 내부 구현에 직접 손대지 않는다. */
   window.KAHUGO_APP = {
     routes: function () { return Object.keys(ROUTES); },
     actions: function () { return Object.keys(ACTIONS); },
-    go: go, render: render, state: S
+    go: go, render: render, state: S, persist: persist,
+    ROUTES: ROUTES, ACTIONS: ACTIONS, KEY: KEY,
+    store: safeStore, D: D, BK: BK,
+    ic: ic, esc: esc, attr: attr, uid: uid, byId: byId, todayStr: todayStr,
+    $: $, $$: $$,
+    toast: toast, openModal: openModal, closeModal: closeModal,
+    openPanel: openPanel, closePanel: closePanel, confirmBox: confirmBox,
+    lockScroll: lockScroll, copyText: copyText, openShareSheet: openShareSheet,
+    shareUrl: shareUrl, crumb: crumb, bmkBtn: bmkBtn, buildShell: buildShell,
+    setScroll: setScroll, markScroll: markScroll, applyTheme: applyTheme,
+    icons: P, setFieldErr: setFieldErr, showEnvHelp: showEnvHelp,
+    version: '3.0'
   };
 
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

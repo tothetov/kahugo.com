@@ -27,10 +27,16 @@
     heroLine2: '사람을 중심에 세우는',
     heroLine3: '전략연구 플랫폼',
     heroSub: '한국AI휴먼전략연구원은 제5의 물결과 AI 대전환 시대를 맞아 인간 중심의 전략, 연구, 교육, 사업화, 커뮤니티 네트워크를 연결하는 민간 전문 싱크탱크형 플랫폼입니다.',
-    email: 'habibot@naver.com',
+    email: 'habibot@gmail.com',
     badge: 'KAHUGO · 제5의 물결 AI휴먼전략 플랫폼',
     footerNote: '© 2026 Korea AI Human Strategy Institute.',
     focusLine: 'Research · Education · Forum · Consulting · Report · Business Lab · Community Network',
+    /* 홈 히어로 하단 신뢰 배지 3종 (로렐 리스 + 2줄 카피) */
+    trustBadges: [
+      { l1: '일·교육·비즈니스·도시의 판을 다시 읽는', l2: '통합 프레임' },
+      { l1: '불안을 전략으로 바꾸는 AI 시대', l2: '생존·도약 가이드' },
+      { l1: '질문하는 인간, 지휘하는 인간의', l2: '미래 경쟁력' }
+    ],
     identityHeadline: '연구도, 교육도, 포럼도, 출판도, 컨설팅도 가능한 큰 그릇',
     identitySub: 'KAHUGO는 기술 중심 담론을 넘어 사람의 질문·판단·창의성·윤리·실행력을 회복하고 확장하는 AI 전략기관입니다.',
     whyNowHeadline: '기술이 빨라질수록, 더 중요한 것은 사람입니다.',
@@ -501,35 +507,38 @@
   ];
 
 
-  /* ── 15. 내비게이션 (6대 메뉴 · 375px 무스크롤 최적화) ───────────
+  /* ── 15. 내비게이션 (v3.2 · 7대 대메뉴 · 375px 가로스크롤 최적화) ──
      ※ route 는 반드시 app.js 의 ROUTES 레지스트리에 존재해야 합니다.
         존재하지 않으면 빌드 게이트가 실패시킵니다.
+     ※ '카후고'는 연구원 소개(#/about), '제5의물결'은 도서 독립퍼널
+        허브(#/book)입니다. '연구랩'은 별도 메뉴로 노출하지 않고
+        '리서치'(#/research) 화면 안에서 바로 이어지도록 재배치했습니다.
      ------------------------------------ */
   var NAV = [
-    { id: 'home',         label: '홈',       full: '홈',            icon: 'home',    route: '#/home' },
-    { id: 'research',     label: '연구',     full: '연구 허브',     icon: 'compass', route: '#/research' },
-    { id: 'labs',         label: '연구랩',   full: '연구랩',        icon: 'flask',   route: '#/labs' },
-    { id: 'programs',     label: '프로그램', full: '4대 사업축',    icon: 'cap',     route: '#/programs' },
-    { id: 'publications', label: '리포트',   full: '출판·리포트',   icon: 'book',    route: '#/publications' },
-    { id: 'community',    label: '커뮤니티', full: '커뮤니티·멤버십', icon: 'users', route: '#/community' },
-    { id: 'book',         label: '제5의 물결', full: '제5의 물결 · 도서', icon: 'wave2', route: '#/book', accent: true }
+    { id: 'about',        label: '카후고',    full: '한국AI휴먼전략연구원 소개',   icon: 'home',    route: '#/about' },
+    { id: 'book',         label: '제5의물결', full: '제5의 물결과 AI 신문명시대', icon: 'wave2',   route: '#/book' },
+    { id: 'research',     label: '리서치',    full: '연구 허브 · 연구랩',          icon: 'compass', route: '#/research' },
+    { id: 'futures',      label: '미래예측',  full: 'AI 신문명시대 미래예측 18',   icon: 'spark',   route: '#/futures' },
+    { id: 'publications', label: '리포트',    full: 'AI Human Strategy Report',    icon: 'book',    route: '#/publications' },
+    { id: 'lexicon',      label: '낱말집',    full: '제5의 물결 낱말집 50',        icon: 'quote',   route: '#/lexicon' },
+    { id: 'opps',         label: '사업기회',  full: 'AI 신문명 사업 기회 30',      icon: 'target',  route: '#/opps' }
   ];
 
-  /* 모바일 하단 탭 (5개 · 엄지 도달 영역) */
+  /* 모바일 하단 탭 (4개 · 엄지 도달 영역 · '서재'는 여기서 상시 노출) */
   var BOTTOM_NAV = [
-    { id: 'home',      label: '홈',      icon: 'home',    route: '#/home' },
-    { id: 'research',  label: '연구',    icon: 'compass', route: '#/research' },
-    { id: 'book',      label: '제5의 물결', icon: 'wave2',  route: '#/book', accent: true },
-    { id: 'diagnosis', label: '자가진단', icon: 'gauge',   route: '#/diagnosis' },
-    { id: 'my',        label: '내 서재',  icon: 'bookmark', route: '#/my' }
+    { id: 'home',      label: '홈',       icon: 'home',     route: '#/home' },
+    { id: 'my',        label: '내 서재',  icon: 'bookmark', route: '#/my' },
+    { id: 'community', label: '커뮤니티', icon: 'users',    route: '#/community' },
+    { id: 'more',      label: '더보기',   icon: 'grid',     route: '#/more' }
   ];
 
-  /* 상단 아이콘바 (찾기 · 다크모드 · 챗봇 · 협력문의) */
+  /* 상단 아이콘바 (찾기 · 다크모드 · 챗봇 · 협력문의 · 375px 4개 고정)
+     ※ '서재'는 하단 탭(내 서재)으로 이관해 아이콘바 밀림을 방지합니다. */
   var ICON_ACTIONS = [
-    { id: 'search',  icon: 'search', label: '찾기',      aria: '통합 검색 열기',        action: 'open-search' },
-    { id: 'theme',   icon: 'moon',   label: '다크모드',  aria: '밝은 화면/어두운 화면 전환', action: 'toggle-theme' },
-    { id: 'chat',    icon: 'chat',   label: '챗봇',      aria: 'KAHUGO 가이드 챗봇 열기', action: 'open-chat' },
-    { id: 'contact', icon: 'mail',   label: '협력문의',  aria: '협력·문의 페이지로 이동',  action: 'goto', route: '#/contact' }
+    { id: 'search', icon: 'search', label: '찾기',     aria: '통합 검색 열기',              action: 'open-search' },
+    { id: 'theme',  icon: 'moon',   label: '다크모드', aria: '밝은 화면/어두운 화면 전환',  action: 'toggle-theme' },
+    { id: 'chat',   icon: 'chat',   label: '챗봇',     aria: 'KAHUGO 가이드 챗봇 열기',     action: 'open-chat' },
+    { id: 'contact',icon: 'mail',   label: '협력문의', aria: '협력·문의 페이지로 이동',     action: 'goto', route: '#/contact' }
   ];
 
   /* ── 16. AI휴먼전략 자가진단 (30초 · 가입 불필요) ────────────────

@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
-Disallow: /qa/
-Sitemap: sitemap.xml
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://www.kahugo.com/sitemap.xml
