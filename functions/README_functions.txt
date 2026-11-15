@@ -1,14 +1,24 @@
-이 functions/ 폴더는 Cloudflare Pages 전용입니다.
-Netlify 등 다른 정적 호스팅에 올릴 때는 이 폴더를 제외해도 사이트는 100% 정상 작동합니다
-(관리자 패널이 /api/config 를 못 찾으면 자동으로 "정적 배포 모드(A안)"로 표시됩니다).
+이 functions/ 폴더는 Cloudflare Pages 전용(관리자 B안 · 실시간 편집 백엔드)입니다.
+일반 웹호스팅(public_html)에는 올리지 않아도 사이트는 100% 그대로 작동합니다(정적 배포 · A안).
 
-Cloudflare Pages에서 B안(실시간 편집 + 회원승인 다기기 동기화)을 쓰려면:
-1) Cloudflare 대시보드 → KV → 네임스페이스 생성 (이름 예: kahugo-kv)
-2) Pages 프로젝트 → Settings → Functions → KV namespace bindings
-   변수 이름: KAHUGO_KV → 방금 만든 네임스페이스 연결
-3) Pages 프로젝트 → Settings → Environment variables
-   이름: KAHUGO_ADMIN_TOKEN → 값: 관리자만 아는 임의의 긴 문자열(운영/미리보기 둘 다 설정)
-4) index.html의 <meta name="kahugo-api" content="off"> 를 content="on" 으로 변경 후 재배포
-5) /admin/ 접속 → 저장/배포 탭 → 상단 배지가 "실시간 편집 연결됨(B안)"으로 바뀌면 성공
+[필수]  KV 바인딩 KAHUGO_KV(사이트 설정·관리자 비밀번호) · D1 바인딩 KAHUGO_DB(커뮤니티·문의·구독, 표 자동 생성)
+        환경변수 KAHUGO_ADMIN_PASSWORD, KAHUGO_SECRET
+        ※ D1이 없으면 사이트 커뮤니티는 자동으로 '이 기기 저장' 방식으로 동작합니다.
+[선택]  GITHUB_TOKEN, GITHUB_REPO, GITHUB_BRANCH         → 관리자 ‘GitHub에 커밋’
+        KAKAO_REST_KEY, KAKAO_CLIENT_SECRET              → 카카오 로그인 실연동
+        NAVER_CLIENT_ID, NAVER_CLIENT_SECRET             → 네이버 로그인 실연동
+        RESEND_API_KEY, RESEND_FROM, INQUIRY_TO          → 문의 메일 자동 전달
+설정 후 index.html 의 <meta name="kahugo-api" content="off"> 를 on 으로 (CloudflarePages 패키지는 이미 on)
 
-자세한 절차는 함께 제공되는 "카후고_배포가이드_Cloudflare_GitHub.docx" 를 참고하세요.
+엔드포인트
+  GET  /api/health                 서버 감지
+  GET  /api/config  · PUT(관리자)   실시간 사이트 설정
+  POST /api/admin/login            관리자 로그인(12시간 토큰)
+  POST /api/admin/password         관리자 비밀번호 변경
+  POST /api/admin/publish          GitHub 커밋(자동 재배포)
+  GET  /api/admin/inbox            문의·글·구독자 모아보기
+  POST /api/admin/moderate         글 숨김/다시공개/삭제
+  GET/POST /api/community/posts    커뮤니티 글 (텍스트만 · 파일 업로드 불가)
+  POST /api/community/comment|like|report
+  POST /api/inquiry · /api/subscribe
+  GET  /api/auth/{kakao|naver}/start · /callback · /api/auth/me · POST /api/auth/logout
